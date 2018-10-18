@@ -19,9 +19,9 @@ define('DEV', true);
 /**
 ** CONFIGURAÇÕES DO MVC
 **/
-define('DIR', '../');
+define('DIR', '../Abigor/');
 
-define('SUBDOMINIO', 'Abigor/');
+define('SUBDOMINIO', 'Abigor');
 
 define('SAVE_SESSIONS', 'Sessions');
 
