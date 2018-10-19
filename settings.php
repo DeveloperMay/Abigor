@@ -61,6 +61,8 @@ define('CLIENTE', 'Prosdocimo');
 
 define('URL_SITE', 'https://abigor.com.br/');
 
+define('DOMINIO_SITE', 'abigor.com.br');
+
 define('HOJE', date('d/m/Y'));
 
 define('AGORA', date('H:i:s'));

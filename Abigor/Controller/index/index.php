@@ -40,8 +40,7 @@ class Index {
 	function index(){
 
 		$mustache = array();
-		$this->metas['title'] = 'DevWeb - Início';
-		$this->metas['descricao'] = 'Site portifolio do Matheus Maydana, criado e desenvolvido por Matheus Maydana.';
+		$this->metas['title'] = 'Abigor - Início';
 
 		if($this->_push === false){
 

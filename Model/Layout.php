@@ -54,7 +54,9 @@ class Model_Layout extends Model_View{
 				'{{static}}' 		=> URL_STATIC,
 				'{{header}}' 		=> $this->_headerHTML($metas),
 				'{{cache}}' 		=> $cache,
-				'{{lang}}'			=> $this->_url
+				'{{lang}}'			=> $this->_url,
+				'{{ano}}'			=> date('Y'),
+				'{{dominio_site}}'	=> DOMINIO_SITE
 			);
 
 			$layout = str_replace(array_keys($mustache), array_values($mustache), file_get_contents(DIR_CLASS.DIR.'Layout/'.$layout.EXTENSAO_VISAO));
@@ -79,7 +81,8 @@ class Model_Layout extends Model_View{
 			$noscript = '';
 		}
 
-		$meta_title = $metas['title'] ?? 'DevWeb';
+		$meta_title = $metas['title'] ?? 'Abigor';
+		$meta_description = $metas['description'] ?? 'Criação de site responsivo, criação de site em Marau-RS, criação de site exclusivo, Webdesign em Marau, Webdesign, desenvolvimento web, site fácil';
 
 		$header = <<<php
 <title>{$meta_title}</title>
@@ -88,22 +91,22 @@ class Model_Layout extends Model_View{
 <meta name="viewport" content="width=device-width, height=device-height, user-scalable=yes, initial-scale=1" />
 <meta name="msapplication-tap-highlight" content="no" />
 <meta name="format-detection" content="telephone=no" />
-<meta name="description" content="">
-<meta  name="robots" content="index, no-follow" />
+<meta name="description" content="{$meta_description}">
+<meta name="robots" content="index, follow" />
 {$noscript}
 <meta name="msapplication-tap-highlight" content="no"/>
-<meta name="apple-mobile-web-app-title" content="Maydana System"/>
-<meta name="application-name" content="Maydana System"/>
+<meta name="apple-mobile-web-app-title" content="Abigor"/>
+<meta name="application-name" content="Abigor"/>
 <meta name="msapplication-TileImage" content="/img/caveira.png"/>
 <meta name="msapplication-TileColor" content="#e8e6e8"/>
 <meta name="theme-color" content="#1c5f8e"/>
-<meta name="author" content="Matheus Maydana" />
+<meta name="author" content="Bames" />
 <link rel="manifest" href="/manifest.json"/>
 <link rel="shortcut icon" href="/img/site/caveira.png" type="image/x-icon">
 <link rel="icon" href="/img/site/caveira.png" type="image/x-icon">
 <script defer src="/js/MS.min.js{{cache}}"></script>
 <script defer src="/js/site.min.js{{cache}}"></script>
-<link rel="stylesheet" type="text/css" href="/css/basico.min.css">
+<link rel="stylesheet" type="text/css" href="/css/basico.min.css{{cache}}">
 php;
 
 		return $header;
