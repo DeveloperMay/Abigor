@@ -4,11 +4,11 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "14/08/2018",
 	"MODEL": "Consultas",
-	"LAST EDIT": "14/08/2018",
-	"VERSION":"0.0.1"
+	"LAST EDIT": "26/10/2018",
+	"VERSION":"0.0.2"
 }
 */
-class Model_Bancodados_Consultas {
+class Model_Bancodados_Consultas extends Model_Bancodados_Login {
 
 	public $_conexao;
 
@@ -22,19 +22,37 @@ class Model_Bancodados_Consultas {
 
 	public $id_conta;
 
+	public $_url;
+
 	function __construct($conexao){
-
-		$id_cliente = null;
-		$array = $_SESSION[CLIENTE]['login'] ?? array();
-		foreach ($array as $id_conta => $info_conta){
-			$id_cliente = $id_conta;
-		}
-
-		$this->id_conta = $id_cliente;
 
 		$this->_conexao = $conexao->conexao();
 
 		$this->_util = new Model_Pluggs_Utilit;
+
+		$this->_url = new Model_Pluggs_Url;
+
+		$url = $this->_url->url();
+
+		if(isset($url[1]) and $url[1] !== 'login'){
+
+			/* SE NÃO TIVER SESSAO LOGIN, CAI FORA */
+			if(!isset($_SESSION['login']) and empty($_SESSION['login'])){
+
+				/* PRECISA ESTAR LOGADO PARA ENTRAR NO SISTEMA */
+				header('location: /login');
+			}
+
+			/* SE EXISTIR A SESSÃO, VERIFICA SE EXISTE O DADO NO DB, SE NÃO TIVER LIMPA A SESSION */
+			if(isset($_SESSION['login'])){
+
+				$cliente = $this->getInfoCliente('log_codigo', key($_SESSION['login']));
+
+				if($cliente === null){
+					unset($_SESSION['login']);
+				}
+			}
+		}
 	}
 
 	function __destruct(){
@@ -535,61 +553,6 @@ class Model_Bancodados_Consultas {
 		return $return;
 	}
 
-	function newPessoa(array $dados){
-
-		$nome 		= $this->_util->basico($dados[0] ?? null);
-		$sexo 		= $this->_util->basico($dados[1] ?? 0);
-		$descricao 	= $this->_util->basico($dados[2] ?? null);
-		$est_codigo	= $this->_util->basico($dados[3] ?? null);
-		$cid_codigo	= $this->_util->basico($dados[4] ?? null);
-		$id_conta	= $this->_util->basico($dados[5] ?? null);
-
-		$sql = $this->_conexao->prepare("INSERT INTO pessoas (
-			nome,
-			sexo,
-			descricao,
-			est_codigo,
-			cid_codigo,
-			id_conta
-		) VALUES (
-			:nome,
-			:sexo,
-			:descricao,
-			:est_codigo,
-			:cid_codigo,
-			:id_conta
-		)");
-		$sql->bindParam(':nome', $nome);
-		$sql->bindParam(':sexo', $sexo);
-		$sql->bindParam(':descricao', $descricao);
-		$sql->bindParam(':est_codigo', $est_codigo);
-		$sql->bindParam(':cid_codigo', $cid_codigo);
-		$sql->bindParam(':id_conta', $id_conta);
-		$sql->execute();
-
-		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
-			
-			$this->saveLogs($sql->errorInfo());
-		}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
-
-			new de($sql->errorInfo());
-		}
-
-		$fetch = $sql->fetch(PDO::FETCH_ASSOC);
-		$sql = null;
-
-		/* SUCESSO */
-		$return = 1;
-
-		if($fetch === false){
-
-			/* FALHA */
-			$return = 2;
-		}
-
-		return $return;
-	}
-
 	private function HASH($string){
 
 		/**
@@ -689,189 +652,6 @@ class Model_Bancodados_Consultas {
 		return $fetch;
 	}
 
-	function login($dados){
-
-		if(is_array($dados) and !empty($dados) and count($dados) > 0){
-
-			$email = $dados['email'];
-			$senha = $this->HASH($dados['senha']);
-
-			$sql = $this->_conexao->prepare('SELECT acesso, id_conta FROM conta WHERE email = :email AND senha = :senha');
-			$sql->bindParam(':email', $email);
-			$sql->bindParam(':senha', $senha);
-			$sql->execute();
-
-			if($sql->errorInfo()[0] !== '00000' and DEV !== true){
-				
-				$this->saveLogs($sql->errorInfo());
-			}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
-
-				new de($sql->errorInfo());
-			}
-			$temp = $sql->fetch(PDO::FETCH_ASSOC);
-			$sql = null;
-
-			if($temp){
-
-				$this->_timesnow($temp['id_conta'], 1);
-				/* LOGADO COM SUCESSO */
-				return 1;
-
-			}else{
-
-				/* SENHA ERRADA */
-				sleep(2);
-				return 3;
-			}
-		}else{
-
-			/* VOCÊ ESTÁ NO LUGAR ERRADO*/
-			sleep(3);
-			return 4;
-		}
-	}
-
-	function logout($id_conta){
-
-		$return = 1;
-		if(!empty($id_conta) and is_numeric($id_conta)){
-			
-			$this->_timesnow($id_conta);
-			unset($_SESSION[CLIENTE]);
-			$return = 2;
-		}
-
-		return $return;
-	}
-
-	function _timesnow($id_conta, $login = null){
-
-		/**
-		** @param (INT)
-		** @param (boolean)
-		** @see ESTA FUNÇÃO ATUALIZA OS DADOS NO BANCO, DATA, HORA E IP (last login)
-		** @see SE $login vier !== null, usuario está logando
-		**/
-
-		$id_conta = $this->_util->basico($id_conta);
-
-		/* USUARIO SAINDO (LOGOUT) - MUDA STATUS */
-		$status = 2;
-		if($login !== null){
-
-			/* USUARIO LOGANDO (LOGIN) - MUDA STATUS */
-			$status = 3;
-		}
-
-		$sql = $this->_conexao->prepare('
-			UPDATE conta SET 
-				status = :status, 
-				hora_ultimo_login = :hora_ultimo_login, 
-				data_ultimo_login = :data_ultimo_login, 
-				ip_ultimo_login	= :ip_ultimo_login 
-			WHERE id_conta = :id_conta
-		');
-		$sql->bindParam(':status', $status, PDO::PARAM_INT);
-		$sql->bindParam(':hora_ultimo_login', $this->_agora, PDO::PARAM_STR);
-		$sql->bindParam(':data_ultimo_login', $this->_hoje, PDO::PARAM_STR);
-		$sql->bindParam(':ip_ultimo_login', $this->_ip, PDO::PARAM_STR);
-		$sql->bindParam(':id_conta', $id_conta, PDO::PARAM_INT);
-		$sql->execute();
-
-		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
-			
-			$this->saveLogs($sql->errorInfo());
-		}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
-
-			new de($sql->errorInfo());
-		}
-
-		$sql = null;
-
-		if(!isset($_SESSION[CLIENTE]['login']) || empty($_SESSION[CLIENTE]['login'])){
-
-			$informacoesLogin[$id_conta]['acesso'] 	= $this->getInfoCliente('acesso', $id_conta);
-			$informacoesLogin[$id_conta]['nome'] 	= $this->getInfoCliente('nome', $id_conta);
-			$informacoesLogin[$id_conta]['email'] 	= $this->getInfoCliente('email', $id_conta);
-
-			$_SESSION[CLIENTE]['login'] = $informacoesLogin;
-		}
-	}
-
-	function getInfoCliente($infoCliente, $id_conta){
-
-		$sql = 'SELECT {{coluna}} FROM conta WHERE id_conta = :id_conta';
-		$sql = str_replace('{{coluna}}', $infoCliente, $sql);
-		$sql = $this->_conexao->prepare($sql);
-		$sql->bindParam(':id_conta', $id_conta);
-		$sql->execute();
-
-		if($sql->errorInfo()[0] !== '00000' and DEV !== true){
-			
-			$this->saveLogs($sql->errorInfo());
-		}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
-
-			new de($sql->errorInfo());
-		}
-		$temp = $sql->fetch(PDO::FETCH_ASSOC);
-		$sql = null;
-
-		return $temp[$infoCliente];
-	}
-
-	function getPessoa($id_conta){
-
-		$id_conta = $this->_util->basico($id_conta);
-
-		if(is_string($id_conta) and !empty($id_conta) and $id_conta > 0){
-
-			$sql = $this->_conexao->prepare('SELECT 
-				p.nome,
-				p.sexo,
-				p.nascimento,
-				p.cpf,
-				c.email,
-				c.senha
-			FROM conta AS c
-			LEFT JOIN pessoas AS p ON p.id_conta = c.id_conta
-			WHERE p.id_conta = :id_conta');
-			$sql->bindParam(':id_conta', $id_conta, PDO::PARAM_STR);
-			$sql->execute();
-
-			if($sql->errorInfo()[0] !== '00000' and DEV !== true){
-				
-				$this->saveLogs($sql->errorInfo());
-			}elseif($sql->errorInfo()[0] !== '00000' and DEV === true){
-
-				new de($sql->errorInfo());
-			}
-
-			$temp = $sql->fetch(PDO::FETCH_ASSOC);
-
-			$sql = null;
-
-			if($temp > 0){
-
-				$this->_util->initSession($temp);
-				return $temp;
-				exit;
-
-			}else{
-
-				return 'Pessoa não encontrada';
-				exit;
-			}
-
-			return 'Tudo ok até aqui';
-			exit;
-
-		}else{
-
-			// Return false, não é array' 404
-			return 'erro isso não é array';
-			exit;
-		}
-	}
 
 	function getConfig($id_conta){
 

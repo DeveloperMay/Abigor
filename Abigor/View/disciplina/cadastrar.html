@@ -1,0 +1,31 @@
+<h1>Cadastrar Disciplina</h1>
+
+<br />
+<br />
+<br />
+<p><a href="/{{controlador}}/">voltar</a></p>
+<br />
+<br />
+<br />
+<form action="/{{controlador}}/novo" method="post">
+	<input type="hidden" name="token" value="{{token}}" />
+
+	<div>Nome</div>
+	<div><input type="text" name="nome" /></div>
+	<br />
+
+	<div>Ensino</div>
+	<div>
+		<select name="ensino">
+			<option value="1">Ensino Médio</option>
+			<option value="2">Ensino Fundamental</option>
+		</select>
+	</div>
+	<br />
+
+	<div>Descricao</div>
+	<div><textarea name="descricao"></textarea>
+	<br />
+
+	<p><button>Cadastrar</button></p>
+</form>

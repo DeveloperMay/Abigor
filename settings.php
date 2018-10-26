@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"CONFIG": "Setting",
-	"LAST EDIT": "22/07/2018",
-	"VERSION":"0.0.9"
+	"LAST EDIT": "26/10/2018",
+	"VERSION":"0.1.0"
 }
 */
 
@@ -14,7 +14,7 @@
 TRUE = DESENVOLVIMENTO
 FALSE = PRODUCAO (saveLogs);
 **/
-define('DEV', true);
+define('DEV', false);
 
 /**
 ** CONFIGURAÇÕES DO MVC
@@ -52,12 +52,14 @@ define('LANGS', array(
 ** @see demais dados em Model/Bancodados/Pssw
 **/
 
-define('BANCO_DADOS', 'pgsql');
+define('BANCO_DADOS', 'mysql');
 
 define('ACTION', 'maydana_system');
 
+define('ESC_CODIGO', '1');
+
 /* NOME CLIENTE */
-define('CLIENTE', 'Prosdocimo');
+define('CLIENTE', 'Escola de Testes');
 
 define('URL_SITE', 'https://abigor.com.br/');
 

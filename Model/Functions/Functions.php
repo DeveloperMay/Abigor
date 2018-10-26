@@ -14,7 +14,7 @@ class Model_Functions_Functions {
 
 		$token = $this->HASH(md5(uniqid(microtime(), true)));
 
-		$_SESSION[CLIENTE][$formulario.'_token'] = $token;
+		$_SESSION[$formulario.'_token'] = $token;
 
 		return $token;
 	}
@@ -22,7 +22,7 @@ class Model_Functions_Functions {
 	function _verificaToken($formulario, $send){
 
 		/* $send = $_POST ou $_GET */
-		if(!isset($_SESSION[CLIENTE][$formulario.'_token'])){
+		if(!isset($_SESSION[$formulario.'_token'])){
 			return false;
 		}
 
@@ -30,33 +30,11 @@ class Model_Functions_Functions {
 			return false;
 		}
 
-		if(isset($_SESSION[CLIENTE][$formulario.'_token']) and $_SESSION[CLIENTE][$formulario.'_token'] !== $send){
+		if(isset($_SESSION[$formulario.'_token']) and $_SESSION[$formulario.'_token'] !== $send){
 			return false;
 		}
 
 		return true;
-	}
-
-	function _token(){
-
-		$token = $this->HASH(md5(sha1(uniqid(time()))));
-		$url = URL_SITE;
-
-		$dados = array();
-		if(isset($_SESSION['token']) and !empty($_SESSION['token'])){
-			unset($_SESSION['token']);
-		}
-
-		if(isset($_SESSION['url'])){
-			unset($_SESSION['url']);
-		}
-
-		$_SESSION['token'] = $token;
-		$_SESSION['url'] = $url;
-		$dados['token'] = $token;
-		$dados['url'] = $url;
-		
-		return $dados;
 	}
 
 	/**
@@ -80,35 +58,15 @@ class Model_Functions_Functions {
 	function checkPermission(){
 
 		$id_cliente = null;
-		$array = $_SESSION[CLIENTE]['login'] ?? array();
+		$array = $_SESSION['login'] ?? array();
 		foreach ($array as $id_conta => $info_conta){
 			$id_cliente = $id_conta;
 		}
 
-		if($_SESSION[CLIENTE]['login'][$id_cliente]['acesso'] !== 6){
+		if($_SESSION['login'][$id_cliente]['acesso'] !== 6){
 
 			/* Não tem permissão para acessar */
 			header('location: /erro404');	
 		};
-	}
-
-	function checkLogin(){
-
-		/* SE NÃO TIVER SESSAO LOGIN, CAI FORA */
-		if(!isset($_SESSION[CLIENTE]['login']) and empty($_SESSION[CLIENTE]['login'])){
-
-			/* PRECISA ESTAR LOGADO PARA ENTRAR NO SISTEMA */
-			header('location: /login');
-		}
-
-		/* SE EXISTIR A SESSÃO, VERIFICA SE EXISTE O DADO NO DB, SE NÃO TIVER LIMPA A SESSION */
-		if(isset($_SESSION[CLIENTE]['login'])){
-
-			$cliente = $this->_consulta->getInfoCliente('nome', key($_SESSION[CLIENTE]['login']));
-
-			if($cliente === null){
-				unset($_SESSION[CLIENTE]['login']);
-			}
-		}
 	}
 }

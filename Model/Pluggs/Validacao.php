@@ -15,13 +15,81 @@ class Model_Pluggs_Validacao {
 
 	}
 
-	function _criarLogin(array $dados){
+	function novaPessoa($dados){
 
 		$error 		= 0;
 		$mensagem 	= '';
 
 		/* VALIDAÇÃO DE NOME */
-		$nome 	= $dados['nome'];
+		$nome 	= $dados['nome'] ?? '';
+
+		if(empty($nome)){
+
+			$error = 1;
+			$mensagem = 'Informe seu nome, ou você não tem!?';
+
+		}elseif(!preg_match('/[A-Z][a-z]* [A-Z][a-z]*/', $nome)){
+
+			$error = 1;
+			$mensagem = 'Informe seu nome completo e correto!';
+
+		}elseif(strlen($nome) < 6){
+
+			$error = 1;
+			$mensagem = 'Informe seu nome completo!';
+
+		}elseif(strlen($nome) > 35){
+
+			$error = 1;
+			$mensagem = 'Porra! Seu nome é muito grande, diminiu isso!';
+		}
+
+		/* SE HOUVER ERRO, EXIBIR */
+		if($error > 0){
+
+			return $mensagem;
+		}
+
+
+		/* VALIDAÇÃO EMAIL */
+		$email 		= $dados['email'];
+		$matchEmail = '/^(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9_](?:[a-zA-Z0-9_\-](?!\.)){0,61}[a-zA-Z0-9_-]?\.)+[a-zA-Z0-9_](?:[a-zA-Z0-9_\-](?!$)){0,61}[a-zA-Z0-9_]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))$/';
+		
+		if(empty($email)){
+
+			$error = 1;
+			$mensagem = 'Informe seu e-mail caralho!';
+
+		}elseif(!preg_match($matchEmail, $email)){
+
+			$error = 1;
+			$mensagem = 'Esse e-mail é inválido, está tentando enganar quem ?';
+
+		}elseif(strlen($email) > 50){
+
+			$error = 1;
+			$mensagem = 'Seu e-mail é muito grande! arruma outro aí..';
+		}
+
+
+		/* SE HOUVER ERRO, EXIBIR */
+		if($error > 0){
+
+			return $mensagem;
+		}
+
+		if($error === 0){
+			return true;
+		}
+	}
+
+	function _criarLogin($dados){
+
+		$error 		= 0;
+		$mensagem 	= '';
+
+		/* VALIDAÇÃO DE NOME */
+		$nome 	= $dados['nome'] ?? '';
 
 		if(empty($nome)){
 
@@ -51,7 +119,7 @@ class Model_Pluggs_Validacao {
 		}
 
 		/* VALIDAÇÃO EMAIL */
-		$email 		= $dados['email'];
+		/*$email 		= $dados['email'];
 		$matchEmail = '/^(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9_](?:[a-zA-Z0-9_\-](?!\.)){0,61}[a-zA-Z0-9_-]?\.)+[a-zA-Z0-9_](?:[a-zA-Z0-9_\-](?!$)){0,61}[a-zA-Z0-9_]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))$/';
 		
 		if(empty($email)){
@@ -71,10 +139,10 @@ class Model_Pluggs_Validacao {
 		}
 
 		/* SE HOUVER ERRO, EXIBIR */
-		if($error > 0){
+		/*if($error > 0){
 
 			return $mensagem;
-		}
+		}*/
 
 
 		/* VALIDAÇÃO SENHA */

@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "14/08/2018",
 	"MODEL": "GOD",
-	"LAST EDIT": "18/08/2018",
-	"VERSION":"0.0.2"
+	"LAST EDIT": "26/10/2018",
+	"VERSION":"0.0.3"
 }
 */
 
@@ -20,7 +20,7 @@ class Model_God extends Model_Layout{
 
 	public $lang = '';
 
-	function __construct($conexao = null){
+	function __construct(){
 
 		$url = $_SERVER['REQUEST_URI'];
 
@@ -42,17 +42,6 @@ class Model_God extends Model_Layout{
 				$this->url = $novaURL;
 			}
 		}
-
-		if($conexao !== null){
-
-			$this->_conexao = $conexao;
-
-		}else{
-
-			$conexao = new Model_Bancodados_Conexao;
-			$this->_conexao = $conexao;
-		}
-
 	}
 
 	// Retorna URL já ignorando o lang

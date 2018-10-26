@@ -1,0 +1,43 @@
+<h1>Cadastro Professor</h1>
+<br />
+<br />
+<br />
+<form action="/{{controlador}}/novo" method="post">
+
+
+	<input type="hidden" name="tipo" value="{{tipo}}" />
+	<input type="hidden" name="token" value="{{token}}" />
+
+	<div>Nome</div>
+	<div><input type="text" name="nome" /></div>
+
+	<br />
+	
+	<div>Nascimento</div>
+	<div><input type="text" name="nascimento" /></div>
+
+	<br />
+	
+	<div>CPF</div>
+	<div><input type="text" name="cpf" /></div>
+
+	<br />
+	
+	<div>Sexo</div>
+	<div>
+		<select name="sexo">
+			<option value="1">Homem</option>
+			<option value="2">Mulher</option>
+		</select>
+	</div>
+
+	<br />
+	
+	<div>E-mail</div>
+	<div><input type="text" name="email" /></div>
+
+	<br />
+
+	<p><button>Cadastrar</button></p>
+	
+</form>
