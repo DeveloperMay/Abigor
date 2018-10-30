@@ -2,13 +2,13 @@
 /*
 	{
 		"AUTHOR":"Matheus Maydana",
-		"CREATED_DATA": "25/10/2018",
-		"CONTROLADOR": "Disciplina",
-		"LAST EDIT": "25/10/2018",
+		"CREATED_DATA": "29/10/2018",
+		"CONTROLADOR": "Vagas",
+		"LAST EDIT": "29/10/2018",
 		"VERSION":"0.0.1"
 	}
 */
-class Disciplina {
+class Vaga {
 
 	public $_func;
 
@@ -24,7 +24,7 @@ class Disciplina {
 
 	private $_push = false;
 
-	private $_controlador = 'disciplina';
+	private $_controlador = 'vaga';
 
 	private $metas = array();
 
@@ -53,26 +53,26 @@ class Disciplina {
 
 	function index(){
 
-		$this->metas['title'] = 'Disciplina - Abigor';
+		$this->metas['title'] = 'Vagas - Abigor';
 
 		$mustache = array(
-			'{{disciplina}}' => $this->_consulta->_getDisciplina(),
+			'{{vaga}}' => 'vagas... <br />vagas',
 			'{{controlador}}' => $this->_controlador
 		);
 
 		if($this->_push === false){
 
-			echo $this->_cor->_visao($this->_cor->_layout($this->_controlador, 'disciplina', $this->metas), $mustache);
+			echo $this->_cor->_visao($this->_cor->_layout($this->_controlador, 'vaga', $this->metas), $mustache);
 
 		}else{
 
-			echo $this->_cor->push($this->_controlador, 'disciplina', $mustache, $this->metas);
+			echo $this->_cor->push($this->_controlador, 'vaga', $mustache, $this->metas);
 		}
 	}
 
 	function cadastrar(){
 
-		$this->metas['title'] = 'Cadastrar disciplina - Abigor';
+		$this->metas['title'] = 'Cadastrar vaga - Abigor';
 
 		/* QUANDO FOR CADASTRAR ALUNO */
 		$visao = 'cadastrar';
@@ -82,7 +82,8 @@ class Disciplina {
 
 		$mustache = array(
 			'{{token}}' => $token,
-			'{{controlador}}' => $this->_controlador
+			'{{controlador}}' => $this->_controlador,
+			'{{vagas}}'	=> $this->_consulta->_getDisciplinasVagas(),
 		);
 
 		if($this->_push === false){
@@ -107,20 +108,27 @@ class Disciplina {
 			if($token === true){
 
 				/* SETA NOME E SENHA, PASSANDO STRIP_TAGS */
-				$dis_ensino 	= $this->_util->basico($_POST['ensino'] ?? '');
-				$dis_nome 		= $this->_util->basico($_POST['nome'] ?? '');
-				$dis_descricao 	= $this->_util->basico($_POST['descricao'] ?? '');
+				$vag_quantidade 		= $this->_util->basico($_POST['vagas'] ?? '');
+				$dis_codigo 			= $this->_util->basico($_POST['disciplina'] ?? '');
+				$vag_atedia 			= $this->_util->basico($_POST['atedia'] ?? '');
+				$vag_descricao 			= $this->_util->basico($_POST['descricao'] ?? '');
 
 				/* VALIDA OS DADOS */
-				$valida = $this->_validacao->novaDisciplina(array('dis_ensino' => $dis_ensino, 'dis_nome' => $dis_nome));
+				$valida = $this->_validacao->novaVaga(array(
+					'vag_quantidade' => $vag_quantidade,
+					'dis_codigo' => $dis_codigo,
+					'vag_atedia' => $vag_atedia,
+					'vag_descricao' => $vag_descricao
+				));
 
 				/* SE FOR VÁLIDO SEGUE ... */
 				if($valida === true){
 
-					$cadastra = $this->_consulta->_novaDisciplina(array(
-						'dis_ensino' => $dis_ensino,
-						'dis_nome' => $dis_nome,
-						'dis_descricao' => $dis_descricao
+					$cadastra = $this->_consulta->_novaVaga(array(
+						'vag_quantidade' => $vag_quantidade,
+						'dis_codigo' => $dis_codigo,
+						'vag_atedia' => $vag_atedia,
+						'vag_descricao' => $vag_descricao
 					));
 
 					switch ($cadastra){
@@ -134,13 +142,13 @@ class Disciplina {
 						case 3:
 
 							/* CADASTRO JÁ EXISTENTE */
-							new de('Já existe um cadastro com este Nome nesse Ensino');
+							new de('Já existe uma VAGA neste dia para esta disciplina');
 							break;
 						
 						default:
 							
 							/* CADASTRADO COM SUCESSO */
-							new de('Disciplina cadastrada com sucesso!');
+							new de('Vaga cadastrada com sucesso!');
 							break;
 					}
 				}

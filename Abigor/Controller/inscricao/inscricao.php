@@ -2,13 +2,13 @@
 /*
 	{
 		"AUTHOR":"Matheus Maydana",
-		"CREATED_DATA": "25/10/2018",
-		"CONTROLADOR": "Disciplina",
-		"LAST EDIT": "25/10/2018",
+		"CREATED_DATA": "29/10/2018",
+		"CONTROLADOR": "Inscrição",
+		"LAST EDIT": "29/10/2018",
 		"VERSION":"0.0.1"
 	}
 */
-class Disciplina {
+class Inscricao {
 
 	public $_func;
 
@@ -24,7 +24,7 @@ class Disciplina {
 
 	private $_push = false;
 
-	private $_controlador = 'disciplina';
+	private $_controlador = 'inscricao';
 
 	private $metas = array();
 
@@ -53,20 +53,20 @@ class Disciplina {
 
 	function index(){
 
-		$this->metas['title'] = 'Disciplina - Abigor';
+		$this->metas['title'] = 'Inscrição - Abigor';
 
 		$mustache = array(
-			'{{disciplina}}' => $this->_consulta->_getDisciplina(),
+			'{{inscricao}}' => 'Maria <br />José',
 			'{{controlador}}' => $this->_controlador
 		);
 
 		if($this->_push === false){
 
-			echo $this->_cor->_visao($this->_cor->_layout($this->_controlador, 'disciplina', $this->metas), $mustache);
+			echo $this->_cor->_visao($this->_cor->_layout($this->_controlador, 'inscricao', $this->metas), $mustache);
 
 		}else{
 
-			echo $this->_cor->push($this->_controlador, 'disciplina', $mustache, $this->metas);
+			echo $this->_cor->push($this->_controlador, 'inscricao', $mustache, $this->metas);
 		}
 	}
 
@@ -82,7 +82,9 @@ class Disciplina {
 
 		$mustache = array(
 			'{{token}}' => $token,
-			'{{controlador}}' => $this->_controlador
+			'{{controlador}}' => $this->_controlador,
+			'{{disciplinas}}'	=> $this->_consulta->_getDisciplinas(),
+			'{{pessoas}}'	=> $this->_consulta->_getPessoa(2),
 		);
 
 		if($this->_push === false){
@@ -107,20 +109,27 @@ class Disciplina {
 			if($token === true){
 
 				/* SETA NOME E SENHA, PASSANDO STRIP_TAGS */
-				$dis_ensino 	= $this->_util->basico($_POST['ensino'] ?? '');
-				$dis_nome 		= $this->_util->basico($_POST['nome'] ?? '');
-				$dis_descricao 	= $this->_util->basico($_POST['descricao'] ?? '');
+				$pes_codigo 		= $this->_util->basico($_POST['pessoa'] ?? '');
+				$dis_codigo 		= $this->_util->basico($_POST['disciplina'] ?? '');
+				$ins_data_marcado 	= $this->_util->basico($_POST['data'] ?? '');
+				$ins_hora_marcado 	= $this->_util->basico($_POST['hora'] ?? '');
 
 				/* VALIDA OS DADOS */
-				$valida = $this->_validacao->novaDisciplina(array('dis_ensino' => $dis_ensino, 'dis_nome' => $dis_nome));
+				$valida = $this->_validacao->novaInscricao(array(
+					'pes_codigo' => $pes_codigo,
+					'dis_codigo' => $dis_codigo,
+					'ins_data_marcado' => $ins_data_marcado,
+					'ins_hora_marcado' => $ins_hora_marcado
+				));
 
 				/* SE FOR VÁLIDO SEGUE ... */
 				if($valida === true){
 
-					$cadastra = $this->_consulta->_novaDisciplina(array(
-						'dis_ensino' => $dis_ensino,
-						'dis_nome' => $dis_nome,
-						'dis_descricao' => $dis_descricao
+					$cadastra = $this->_consulta->_novaInscricao(array(
+						'pes_codigo' => $pes_codigo,
+						'dis_codigo' => $dis_codigo,
+						'ins_data_marcado' => $ins_data_marcado,
+						'ins_hora_marcado' => $ins_hora_marcado
 					));
 
 					switch ($cadastra){
@@ -134,13 +143,13 @@ class Disciplina {
 						case 3:
 
 							/* CADASTRO JÁ EXISTENTE */
-							new de('Já existe um cadastro com este Nome nesse Ensino');
+							new de('Já existe uma inscrição nesta disciplina para este aluno');
 							break;
 						
 						default:
 							
 							/* CADASTRADO COM SUCESSO */
-							new de('Disciplina cadastrada com sucesso!');
+							new de('Inscrição cadastrada com sucesso!');
 							break;
 					}
 				}

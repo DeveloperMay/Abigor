@@ -4,7 +4,7 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"CONFIG": "Setting",
-	"LAST EDIT": "26/10/2018",
+	"LAST EDIT": "29/10/2018",
 	"VERSION":"0.1.0"
 }
 */
@@ -95,6 +95,9 @@ define('HASH_PASSWORD', '123');
 ** CONFIGURAÇÕES IMAGEMS
 **/
 session_start();
+
+
+define('LOG_CODIGO', key($_SESSION['login']));
 /*
 $id_cliente = null;
 $array = $_SESSION[CLIENTE]['login'] ?? array();

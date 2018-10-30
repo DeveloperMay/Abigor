@@ -2,9 +2,9 @@
 /*
 	{
 		"AUTHOR":"Matheus Maydana",
-		"CREATED_DATA": "10/26/2018",
-		"CONTROLADOR": "Pessoa",
-		"LAST EDIT": "26/10/2018",
+		"CREATED_DATA": "14/08/2018",
+		"CONTROLADOR": "Index",
+		"LAST EDIT": "14/08/2018",
 		"VERSION":"0.0.1"
 	}
 */
@@ -75,26 +75,12 @@ class Pessoa {
 		$this->metas['title'] = 'Cadastrar Pessoa - Abigor';
 
 		/* QUANDO FOR CADASTRAR ALUNO */
-		$visao = 'aluno';
-		$tipo = 1;
-		
-		/* QUANDO FOR CADASTRAR PROFESSOR */
-		if(isset($this->_url[3]) and $this->_url[3] === 'professor'){
-
-			$visao = $this->_url[3];
-			$tipo = 2;
-	
-		}elseif(!isset($this->_url[3])){
-			
-			$tipo = '';
-			$visao = 'cadastrar';
-		}
+		$visao = 'cadastrar';
 
 		/* GERA O TOKEN PARA LOGIN */
 		$token = $this->_cor->_TokenForm('novo');
 
 		$mustache = array(
-			'{{tipo}}'	=> $tipo,
 			'{{token}}' => $token,
 			'{{controlador}}' => $this->_controlador
 		);

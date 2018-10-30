@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "14/08/2018",
 	"MODEL": "GOD",
-	"LAST EDIT": "26/10/2018",
-	"VERSION":"0.0.3"
+	"LAST EDIT": "18/08/2018",
+	"VERSION":"0.0.2"
 }
 */
 

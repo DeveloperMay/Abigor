@@ -2,9 +2,9 @@
 /*
 	{
 		"AUTHOR":"Matheus Maydana",
-		"CREATED_DATA": "26/10/2018",
-		"MODEL": "Pessoa",
-		"LAST EDIT": "26/10/2018",
+		"CREATED_DATA": "25/10/2018",
+		"CONTROLADOR": "Pessoa",
+		"LAST EDIT": "25/10/2018",
 		"VERSION":"0.0.1"
 	}
 */
@@ -24,12 +24,14 @@ class Model_Bancodados_Pessoa extends Model_Bancodados_Disciplina {
 				*
 			FROM cad_pessoa
 			WHERE esc_codigo = :esc_codigo $tipo
+			ORDER BY pes_nome ASC
 		");
 		$sql->bindParam(':esc_codigo', $esc_codigo);
 		if($pes_tipo !== false){
 			$sql->bindParam(':pes_tipo', $pes_tipo);
 		}
 		$sql->execute();
+		new Model_Debugger($sql, __METHOD__, 'Select get Todas pessoas');
 		$fetch = $sql->fetchAll(PDO::FETCH_ASSOC);
 		$sql = null;
 
@@ -37,17 +39,17 @@ class Model_Bancodados_Pessoa extends Model_Bancodados_Disciplina {
 
 		foreach($fetch as $arr){
 
-			$html .= <<<php
-		<div>{$arr['pes_nome']} - {$arr['pes_email']}</div>
+			$ensino = 'Ensino Médio';
+			if(isset($arr['pes_ensino']) and $arr['pes_ensino'] == 2){
+				$ensino = 'Ensino Fundamental';
+			}
 
-		<br />
-		<br />
-		<br />
+			$html .= <<<php
+		<option value="{$arr['pes_codigo']}">{$arr['pes_nome']} - {$ensino}</option>
 php;
 		}
 
 		return $html;
-
 	}
 
 	function _novaPessoa($dados){
@@ -72,6 +74,7 @@ php;
 		$sql->bindParam(':pes_nome', $pes_nome);
 		$sql->bindParam(':pes_cpf', $pes_cpf);
 		$sql->execute();
+		new Model_Debugger($sql, __METHOD__, 'Select nova pessoa');
 		$temp = $sql->fetch(PDO::FETCH_ASSOC);
 		$sql = null;
 

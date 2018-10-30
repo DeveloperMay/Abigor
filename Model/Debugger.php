@@ -2,9 +2,9 @@
 /*
 	{
 		"AUTHOR":"Matheus Maydana",
-		"CREATED_DATA": "26/10/2018",
-		"MODEL": "Debugger",
-		"LAST EDIT": "26/10/2018",
+		"CREATED_DATA": "25/10/2018",
+		"CONTROLADOR": "Debugger",
+		"LAST EDIT": "25/10/2018",
 		"VERSION":"0.0.1"
 	}
 */

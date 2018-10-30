@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "14/08/2018",
 	"MODEL": "Conexao",
-	"LAST EDIT": "26/10/2018",
-	"VERSION":"0.0.1"
+	"LAST EDIT": "29/10/2018",
+	"VERSION":"0.0.2"
 }
 */
 

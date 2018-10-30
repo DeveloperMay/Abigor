@@ -3,8 +3,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "14/08/2018",
 	"MODEL": "Functions",
-	"LAST EDIT": "18/08/2018",
-	"VERSION":"0.0.2"
+	"LAST EDIT": "29/10/2018",
+	"VERSION":"0.0.3"
 */
 
 class Model_Functions_Functions {

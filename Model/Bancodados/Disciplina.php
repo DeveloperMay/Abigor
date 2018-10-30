@@ -2,13 +2,90 @@
 /*
 	{
 		"AUTHOR":"Matheus Maydana",
-		"CREATED_DATA": "26/10/2018",
+		"CREATED_DATA": "25/10/2018",
 		"CONTROLADOR": "Disciplina",
-		"LAST EDIT": "26/10/2018",
+		"LAST EDIT": "25/10/2018",
 		"VERSION":"0.0.1"
 	}
 */
-class Model_Bancodados_Disciplina {
+class Model_Bancodados_Disciplina extends Model_Bancodados_Inscricao {
+
+	function _getDisciplinasVagas(){
+
+		$esc_codigo = ESC_CODIGO;
+
+		$sql = $this->_conexao->prepare("
+			SELECT 
+				vag.vag_codigo,
+				vag.vag_quantidade,
+				vag.vag_atedia,
+				dis.dis_codigo,
+				dis.dis_ensino,
+				dis.dis_nome
+			FROM disciplina AS dis
+			LEFT JOIN vaga AS vag ON vag.dis_codigo = dis.dis_codigo
+			WHERE dis.esc_codigo = :esc_codigo
+			ORDER BY dis.dis_ensino ASC, dis.dis_nome ASC
+		");
+		$sql->bindParam(':esc_codigo', $esc_codigo);
+		$sql->execute();
+		new Model_Debugger($sql, __METHOD__, 'Select _getDisciplinasVagas');
+		$fetch = $sql->fetchAll(PDO::FETCH_ASSOC);
+		$sql = null;
+
+		$html = '';
+		foreach($fetch as $arr){
+
+			if(isset($arr['vag_atedia']) and $arr['vag_atedia'] <= date('dmY')){
+				continue;
+			}
+
+			$ensino = 'Ensino Médio';
+			if(isset($arr['dis_ensino']) and $arr['dis_ensino'] == 2){
+				$ensino = 'Ensino Fundamental';
+			}
+
+			$html .= <<<php
+		<option value="{$arr['dis_codigo']}">{$arr['dis_nome']} - {$ensino}</option>
+php;
+		}
+
+		return $html;
+	}
+
+	function _getDisciplinas(){
+
+		$esc_codigo = ESC_CODIGO;
+
+		$sql = $this->_conexao->prepare("
+			SELECT 
+				*
+			FROM disciplina
+			WHERE esc_codigo = :esc_codigo
+			ORDER BY dis_ensino ASC, dis_nome ASC
+		");
+		$sql->bindParam(':esc_codigo', $esc_codigo);
+		$sql->execute();
+		new Model_Debugger($sql, __METHOD__, 'Select _getDisciplinas');
+		$fetch = $sql->fetchAll(PDO::FETCH_ASSOC);
+		$sql = null;
+
+		$html = '';
+
+		foreach($fetch as $arr){
+
+			$ensino = 'Ensino Médio';
+			if(isset($arr['dis_ensino']) and $arr['dis_ensino'] == 2){
+				$ensino = 'Ensino Fundamental';
+			}
+
+			$html .= <<<php
+		<option value="{$arr['dis_codigo']}">{$arr['dis_nome']} - {$ensino}</option>
+php;
+		}
+
+		return $html;
+	}
 
 	function _getDisciplina(){
 
@@ -22,6 +99,7 @@ class Model_Bancodados_Disciplina {
 		");
 		$sql->bindParam(':esc_codigo', $esc_codigo);
 		$sql->execute();
+		new Model_Debugger($sql, __METHOD__, 'Select _getDisciplina');
 		$fetch = $sql->fetchAll(PDO::FETCH_ASSOC);
 		$sql = null;
 

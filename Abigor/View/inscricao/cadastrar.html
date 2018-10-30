@@ -1,0 +1,42 @@
+<h1>Cadastrar Disciplina</h1>
+
+<br />
+<br />
+<br />
+<p><a href="/{{controlador}}/">voltar</a></p>
+<br />
+<br />
+<br />
+<form action="/{{controlador}}/novo" method="post">
+	<input type="hidden" name="token" value="{{token}}" />
+
+	<div>Nome</div>
+	<div>
+		<select name="pessoa">
+			{{pessoas}}
+		</select>
+	</div>
+	<br />
+
+	<div>Disciplina</div>
+	<div>
+		<select name="disciplina">
+			{{disciplinas}}
+		</select>
+	</div>
+	<br />
+
+	<div>Dia</div>
+	<div><input type="date" name="data" value="2018-10-29"/></div>
+	<br />
+
+	<div>Dia</div>
+	<div><input type="time" name="hora" value="08:30"/></div>
+	<br />
+
+	<div>Descricao</div>
+	<div><textarea name="descricao"></textarea>
+	<br />
+
+	<p><button>Cadastrar</button></p>
+</form>
