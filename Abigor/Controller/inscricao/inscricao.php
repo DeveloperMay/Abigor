@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "29/10/2018",
 		"CONTROLADOR": "Inscrição",
-		"LAST EDIT": "29/10/2018",
-		"VERSION":"0.0.1"
+		"LAST EDIT": "31/10/2018",
+		"VERSION":"0.0.2"
 	}
 */
 class Inscricao {
@@ -53,10 +53,10 @@ class Inscricao {
 
 	function index(){
 
-		$this->metas['title'] = 'Inscrição - Abigor';
+		$this->metas['title'] = 'Inscrições - Abigor';
 
 		$mustache = array(
-			'{{inscricao}}' => 'Maria <br />José',
+			'{{inscricao}}' => $this->_consulta->_getInscricaoes(),
 			'{{controlador}}' => $this->_controlador
 		);
 
@@ -70,21 +70,60 @@ class Inscricao {
 		}
 	}
 
+	/* QUANDO FOR VISUALIZAR INSCRIÇÃO */
+	function ver(){
+
+		/* CASO EXISTA O CODE */
+		$title = 'Inscrição não encontrada - Abigor';
+		$html = 'Inscrição não encontrada.';
+		if(isset($this->_url[3]) and is_numeric($this->_url[3])){
+
+			$inscrito = $this->_consulta->_getInscricao($this->_url[3]);
+
+			$title = $inscrito['title'];
+			$html = $inscrito['html'];
+
+			if(isset($inscrito['title']) and empty($inscrito['title'])){
+				$title = 'Inscrição não encontrada - Abigor';
+				$html = 'Inscrição não encontrada.';
+			}
+
+			$this->metas['title'] = $title.' - Abigor';
+
+		}
+
+		/* QUANDO FOR VISUALIZAR INSCRIÇÃO */
+		$visao = 'ver';
+
+		$mustache = array(
+			'{{inscrito}}' => $html
+		);
+
+		if($this->_push === false){
+
+			echo $this->_cor->_visao($this->_cor->_layout($this->_controlador, $visao, $this->metas), $mustache);
+
+		}else{
+
+			echo $this->_cor->push($this->_controlador, $visao, $mustache, $this->metas);
+		}
+	}
+
 	function cadastrar(){
 
 		$this->metas['title'] = 'Cadastrar disciplina - Abigor';
 
-		/* QUANDO FOR CADASTRAR ALUNO */
+		/* QUANDO FOR CADASTRAR INSCRIÇÃO */
 		$visao = 'cadastrar';
 
 		/* GERA O TOKEN PARA LOGIN */
 		$token = $this->_cor->_TokenForm('novo');
 
 		$mustache = array(
-			'{{token}}' => $token,
-			'{{controlador}}' => $this->_controlador,
-			'{{disciplinas}}'	=> $this->_consulta->_getDisciplinas(),
-			'{{pessoas}}'	=> $this->_consulta->_getPessoa(2),
+			'{{token}}' 		=> $token,
+			'{{controlador}}' 	=> $this->_controlador,
+			'{{disciplinas}}'	=> $this->_consulta->_getDisciplinasInscricao(),
+			'{{pessoas}}'		=> $this->_consulta->_getPessoa(1),
 		);
 
 		if($this->_push === false){
@@ -110,14 +149,14 @@ class Inscricao {
 
 				/* SETA NOME E SENHA, PASSANDO STRIP_TAGS */
 				$pes_codigo 		= $this->_util->basico($_POST['pessoa'] ?? '');
-				$dis_codigo 		= $this->_util->basico($_POST['disciplina'] ?? '');
-				$ins_data_marcado 	= $this->_util->basico($_POST['data'] ?? '');
-				$ins_hora_marcado 	= $this->_util->basico($_POST['hora'] ?? '');
+				$vag_codigo 		= $this->_util->basico($_POST['vaga'] ?? '');
+				$ins_data_marcado 	= date('dmY', strtotime($this->_util->basico($_POST['data'] ?? '')));
+				$ins_hora_marcado 	= date('hi', strtotime($this->_util->basico($_POST['hora'] ?? '')));
 
 				/* VALIDA OS DADOS */
 				$valida = $this->_validacao->novaInscricao(array(
 					'pes_codigo' => $pes_codigo,
-					'dis_codigo' => $dis_codigo,
+					'vag_codigo' => $vag_codigo,
 					'ins_data_marcado' => $ins_data_marcado,
 					'ins_hora_marcado' => $ins_hora_marcado
 				));
@@ -127,7 +166,7 @@ class Inscricao {
 
 					$cadastra = $this->_consulta->_novaInscricao(array(
 						'pes_codigo' => $pes_codigo,
-						'dis_codigo' => $dis_codigo,
+						'vag_codigo' => $vag_codigo,
 						'ins_data_marcado' => $ins_data_marcado,
 						'ins_hora_marcado' => $ins_hora_marcado
 					));
@@ -143,7 +182,13 @@ class Inscricao {
 						case 3:
 
 							/* CADASTRO JÁ EXISTENTE */
-							new de('Já existe uma inscrição nesta disciplina para este aluno');
+							new de('Este aluno já está inscrito nesta disciplina');
+							break;
+
+						case 4:
+
+							/* VAGA NÃO EXISTE OU INSCRIÇÕES ENCERRADAS */
+							new de('Está vaga não existe ou as inscrições já estão incerradas!');
 							break;
 						
 						default:

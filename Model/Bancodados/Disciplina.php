@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "25/10/2018",
 		"CONTROLADOR": "Disciplina",
-		"LAST EDIT": "25/10/2018",
-		"VERSION":"0.0.1"
+		"LAST EDIT": "31/10/2018",
+		"VERSION":"0.0.2"
 	}
 */
 class Model_Bancodados_Disciplina extends Model_Bancodados_Inscricao {
@@ -14,18 +14,26 @@ class Model_Bancodados_Disciplina extends Model_Bancodados_Inscricao {
 
 		$esc_codigo = ESC_CODIGO;
 
+		$hoje = date('dmY');
 		$sql = $this->_conexao->prepare("
 			SELECT 
 				vag.vag_codigo,
 				vag.vag_quantidade,
 				vag.vag_atedia,
+				vag.vag_status,
 				dis.dis_codigo,
 				dis.dis_ensino,
+				/*CASE dis.dis_ensino
+					WHEN 1 THEN 'ensino médio'
+					ELSE 'ensino fundamental'
+				END AS dis_ensino,*/
 				dis.dis_nome
 			FROM disciplina AS dis
 			LEFT JOIN vaga AS vag ON vag.dis_codigo = dis.dis_codigo
 			WHERE dis.esc_codigo = :esc_codigo
-			ORDER BY dis.dis_ensino ASC, dis.dis_nome ASC
+			GROUP BY dis.dis_codigo
+			ORDER BY vag.vag_status ASC
+
 		");
 		$sql->bindParam(':esc_codigo', $esc_codigo);
 		$sql->execute();
@@ -36,8 +44,12 @@ class Model_Bancodados_Disciplina extends Model_Bancodados_Inscricao {
 		$html = '';
 		foreach($fetch as $arr){
 
-			if(isset($arr['vag_atedia']) and $arr['vag_atedia'] <= date('dmY')){
-				continue;
+			/* VERIFICA SE A VAGA NÃÃÃÃO ESTÁ ATIVA OU JÁ VENCEU , se sim, não exibe a disciplina */
+			if(isset($arr['vag_atedia'], $arr['vag_status'], $arr['vag_codigo']) and !empty($arr['vag_codigo']) and $arr['vag_atedia'] <= date('dmY')){
+
+				if($arr['vag_status'] == 2){
+					continue;
+				}
 			}
 
 			$ensino = 'Ensino Médio';
@@ -46,7 +58,7 @@ class Model_Bancodados_Disciplina extends Model_Bancodados_Inscricao {
 			}
 
 			$html .= <<<php
-		<option value="{$arr['dis_codigo']}">{$arr['dis_nome']} - {$ensino}</option>
+		<option value="{$arr['dis_codigo']}">{$arr['dis_nome']} - {$ensino} - {$arr['vag_quantidade']} vagas</option>
 php;
 		}
 

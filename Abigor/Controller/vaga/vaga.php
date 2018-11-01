@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "29/10/2018",
 		"CONTROLADOR": "Vagas",
-		"LAST EDIT": "29/10/2018",
-		"VERSION":"0.0.1"
+		"LAST EDIT": "31/10/2018",
+		"VERSION":"0.0.2"
 	}
 */
 class Vaga {
@@ -56,7 +56,7 @@ class Vaga {
 		$this->metas['title'] = 'Vagas - Abigor';
 
 		$mustache = array(
-			'{{vaga}}' => 'vagas... <br />vagas',
+			'{{vaga}}' => $this->_consulta->_getVagas(),
 			'{{controlador}}' => $this->_controlador
 		);
 
@@ -110,7 +110,7 @@ class Vaga {
 				/* SETA NOME E SENHA, PASSANDO STRIP_TAGS */
 				$vag_quantidade 		= $this->_util->basico($_POST['vagas'] ?? '');
 				$dis_codigo 			= $this->_util->basico($_POST['disciplina'] ?? '');
-				$vag_atedia 			= $this->_util->basico($_POST['atedia'] ?? '');
+				$vag_atedia 			= date('dmY', strtotime($this->_util->basico($_POST['atedia'] ?? '')));
 				$vag_descricao 			= $this->_util->basico($_POST['descricao'] ?? '');
 
 				/* VALIDA OS DADOS */

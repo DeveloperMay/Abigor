@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "14/08/2018",
 	"MODEL": "View",
-	"LAST EDIT": "18/08/2018",
-	"VERSION":"0.0.2"
+	"LAST EDIT": "31/10/2018",
+	"VERSION":"0.0.3"
 }
 */
 
@@ -50,7 +50,10 @@ class Model_View extends Model_Functions_Functions{
 
 				if(file_exists(DIR.SUBDOMINIO.'/View'.$this->lang.'/'.$controlador.'/'.$visao.EXTENSAO_VISAO)){
 
-				$mustache = array();
+
+				$mustache = array(
+					'{{navegacao}}' => $this->_navegacao()
+				);
 
 				$visao = str_replace(array_keys($mustache), array_values($mustache), file_get_contents(DIR.SUBDOMINIO.'/View'.$this->lang.'/'.$controlador.'/'.$visao.EXTENSAO_VISAO));
 
@@ -72,5 +75,32 @@ class Model_View extends Model_Functions_Functions{
 			** ERRO, ARQUIVO VISÃO NÃO ENCONTRADO
 			**/
 		}
+	}
+
+	private function _navegacao(){
+
+		$controlador = '';
+		$acao 		 = '';
+		$method 	 = '';
+		$descricao	 = '';
+
+		if(isset($this->url[1]) and !empty($this->url[1])){
+			$controlador = '<a href="/'.$this->url[1].'">'.$this->url[1].'</a>';
+		}
+		if(isset($this->url[2]) and !empty($this->url[2])){
+			$acao = ' > <a href="/'.$this->url[1].'/'.$this->url[2].'">'.$this->url[2].'</a>';
+		}
+		if(isset($this->url[3]) and !empty($this->url[3])){
+			$method = ' > <a href="/'.$this->url[1].'/'.$this->url[2].'/'.$this->url[3].'">'.$this->url[3].'</a>';
+		}
+		if(isset($this->url[4]) and !empty($this->url[4])){
+			$descricao = ' > '.$this->url[4];
+		}
+
+		$navegacao = '<a href="/">início</a> > '.$controlador.$acao.$method.$descricao;
+
+		$html = '<p>'.$navegacao.'</p>';
+
+		return $html;
 	}
 }

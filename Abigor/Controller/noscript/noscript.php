@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "14/08/2018",
 		"CONTROLADOR": "No Script",
-		"LAST EDIT": "14/08/2018",
-		"VERSION":"0.0.1"
+		"LAST EDIT": "31/10/2018",
+		"VERSION":"0.0.2"
 	}
 */
 class Noscript{
@@ -13,6 +13,8 @@ class Noscript{
 	public $_cor;
 
 	private $_push = false;
+
+	private $_controlador = 'noscript';
 
 	private $metas = array();
 
@@ -33,11 +35,12 @@ class Noscript{
 
 		if($this->_push === false){
 
-			echo $this->_cor->_visao($this->_cor->_layout('noscript', 'noscript', 'login', $this->metas), $mustache);
+
+			echo $this->_cor->_visao($this->_cor->_layout($this->_controlador, 'noscript', $this->metas), $mustache);
 
 		}else{
 
-			echo $this->_cor->push('noscript', 'noscript', $mustache, $this->metas);
+			echo $this->_cor->push($this->_controlador, 'noscript', $mustache, $this->metas);
 		}
 	}
 }

@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "31/07/2018",
 	"MODEL": "Validacão",
-	"LAST EDIT": "29/10/2018",
-	"VERSION":"0.0.2"
+	"LAST EDIT": "31/10/2018",
+	"VERSION":"0.0.3"
 }
 */
 
@@ -75,11 +75,10 @@ class Model_Pluggs_Validacao {
 			$error = 1;
 			$mensagem = 'Informe até o dia!';
 
-		}elseif($vag_atedia < date('Y-m-d')){
+		}elseif($vag_atedia < date('dmY')){
 
 			$error = 1;
 			$mensagem = 'Até o dia não pode ser retroativo!';
-
 		}
 
 		/* SE HOUVER ERRO, EXIBIR */
@@ -119,18 +118,18 @@ class Model_Pluggs_Validacao {
 			return $mensagem;
 		}
 
-		/* VALIDAÇÃO DE DISCIPLINA */
-		$dis_codigo = $dados['dis_codigo'] ?? '';
+		/* VALIDAÇÃO DE VAGA */
+		$vag_codigo = $dados['vag_codigo'] ?? '';
 
-		if(empty($dis_codigo)){
-
-			$error = 1;
-			$mensagem = 'Informe a disciplina!';
-
-		}elseif(!is_numeric($dis_codigo)){
+		if(empty($vag_codigo)){
 
 			$error = 1;
-			$mensagem = 'Informe a disciplina corretamente!';
+			$mensagem = 'Informe a vaga!';
+
+		}elseif(!is_numeric($vag_codigo)){
+
+			$error = 1;
+			$mensagem = 'Informe a vaga corretamente!';
 
 		}
 
@@ -148,7 +147,7 @@ class Model_Pluggs_Validacao {
 			$error = 1;
 			$mensagem = 'Informe a data da inscrição!';
 
-		}elseif(strlen($ins_data_marcado) !== 10){
+		}elseif(strlen($ins_data_marcado) !== 8){
 
 			$error = 1;
 			$mensagem = 'Informe a data da inscrição corretamente!';
@@ -169,7 +168,7 @@ class Model_Pluggs_Validacao {
 			$error = 1;
 			$mensagem = 'Informe a hora da inscrição!';
 
-		}elseif(strlen($ins_hora_marcado) !== 5){
+		}elseif(strlen($ins_hora_marcado) !== 4){
 
 			$error = 1;
 			$mensagem = 'Informe a hora da inscrição corretamente!';
