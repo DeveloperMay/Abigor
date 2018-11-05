@@ -8,7 +8,7 @@
 		"VERSION":"0.0.2"
 	}
 */
-class Model_Bancodados_Vaga {
+class Model_Bancodados_Vaga extends Model_Bancodados_Cadastrologin {
 
 	function _getVagas(){
 

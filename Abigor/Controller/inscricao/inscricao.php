@@ -53,7 +53,7 @@ class Inscricao {
 
 	function index(){
 
-		$this->metas['title'] = 'Inscrições - Abigor';
+		$this->metas['title'] = 'Inscrições - '.$_SESSION['login'][LOG_CODIGO]['log_nome'];
 
 		$mustache = array(
 			'{{inscricao}}' => $this->_consulta->_getInscricaoes(),
@@ -74,7 +74,7 @@ class Inscricao {
 	function ver(){
 
 		/* CASO EXISTA O CODE */
-		$title = 'Inscrição não encontrada - Abigor';
+		$title = 'Inscrição não encontrada - '.$_SESSION['login'][LOG_CODIGO]['log_nome'];
 		$html = 'Inscrição não encontrada.';
 		if(isset($this->_url[3]) and is_numeric($this->_url[3])){
 
@@ -111,7 +111,7 @@ class Inscricao {
 
 	function cadastrar(){
 
-		$this->metas['title'] = 'Cadastrar disciplina - Abigor';
+		$this->metas['title'] = 'Cadastrar disciplina - '.$_SESSION['login'][LOG_CODIGO]['log_nome'];
 
 		/* QUANDO FOR CADASTRAR INSCRIÇÃO */
 		$visao = 'cadastrar';

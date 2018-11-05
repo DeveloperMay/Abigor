@@ -2,10 +2,10 @@
 /*
 	{
 		"AUTHOR":"Matheus Maydana",
-		"CREATED_DATA": "25/10/2018",
+		"CREATED_DATA": "03/11/2018",
 		"CONTROLADOR": "Login",
-		"LAST EDIT": "25/10/2018",
-		"VERSION":"0.0.1"
+		"LAST EDIT": "03/11/2018",
+		"VERSION":"0.0.2"
 	}
 */
 
@@ -50,7 +50,7 @@ class Login extends metodos{
 
 	function index(){
 
-		$this->metas['title'] = 'Abigor - Login';
+		$this->metas['title'] = 'Login - Abigor';
 
 		/* GERA O TOKEN PARA LOGIN */
 		$token = $this->_cor->_TokenForm('login');
@@ -81,48 +81,74 @@ class Login extends metodos{
 			if($token === true){
 
 				/* SETA NOME E SENHA, PASSANDO STRIP_TAGS */
-				$nome 	= $this->_util->basico($_POST['nome'] ?? '');
+				$cpf 	= $this->_util->basico($_POST['cpf'] ?? '');
 				$senha 	= $this->_util->basico($_POST['senha'] ?? '');
 
 				/* VALIDA OS DADOS */
-				$valida = $this->_validacao->_criarLogin(array('nome' => $nome, 'senha' => $senha));
+				$valida = $this->_validacao->_criarLogin(array('cpf' => $cpf, 'senha' => $senha));
 
 				/* SE FOR VÁLIDO SEGUE ... */
 				if($valida === true){
 
-					$login = $this->_consulta->login(array('nome' => $nome, 'senha' => $senha));
+					$login = $this->_consulta->login(array('cpf' => $cpf, 'senha' => $senha));
 
 					switch ($login){
+
+						case 2:
+
+							/* FALHA QUERY */
+							echo json_encode(array('res' => 'no', 'info' => 'Ops, tente novamente mais tarde!'));
+							break;
 
 						case 3:
 
 							/* SENHA ERRADA */
-							new de('Senha incorreta');
+							echo json_encode(array('res' => 'no', 'info' => 'Senha incorreta'));
 							break;
+							exit;
 						
 						case 4:
 
 							/* DADOS INVÁLIDOS */
-							new de('Tente novamente mais tarde!');
+							echo json_encode(array('res' => 'no', 'info' => 'Tente novamente mais tarde!'));
 							break;
 						
 						default:
 							
 							/* LOGADO COM SUCESSO */
-							header('location: /');
+							echo json_encode(array('res' => 'ok', 'info' => 'Logando...'));
 							break;
 					}
+
+				}else{
+
+					/* ERROS VALIDAÇÃO */
+					echo json_encode(array('res' => 'no', 'info' => $valida));
+					exit;
 				}
 
-				new de($valida);
+			}else{
+
+				echo json_encode(array('res' => 'no', 'info' => 'token errado seu pnc!'));
 				exit;
 			}
 
-			new de('token errado seu pnc!');
+		}else{
+
+			echo json_encode(array('res' => 'no', 'info' => 'informe o token !'));
 			exit;
 		}
+	}
 
-		new de('informe o token !');
-		exit;
+	function logout(){
+
+		if(isset($_GET['s']) and is_numeric($_GET['s'])){
+
+			$logout = $this->_consulta->logout($_GET['s']);
+			header('location: /login');
+		}else{
+
+			header('location: /pagina-nao-encontrada');
+		}
 	}
 }

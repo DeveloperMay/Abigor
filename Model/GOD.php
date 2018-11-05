@@ -9,6 +9,8 @@
 }
 */
 
+require_once 'Functions/Permicoes.php';
+
 class Model_God extends Model_Layout{
 
 
@@ -120,16 +122,17 @@ class Model_God extends Model_Layout{
 		$html = preg_replace(array("/\/\*(.*?)\*\//", "/<!--(.*?)-->/", "/\t+/"), ' ', $html);
 
 		$mustache = array(
-			"\t"		=> ' ',
-			" "			=> ' ',
-			PHP_EOL		=> ' ',
+			"\t"		=> '',
+			""			=> ' ',
+			PHP_EOL		=> '',
 			'> <'		=> '><',
-			'  '		=> ' ',
-			'   '		=> ' ',
-			'    '		=> ' ',
-			'     '		=> ' ',
+			'  '		=> '',
+			'   '		=> '',
+			'    '		=> '',
+			'     '		=> '',
 			'> <'		=> '><',
-			'NAOENTER' 	=> PHP_EOL
+			'
+'						=> ''
 		);
 		
 		return str_replace(array_keys($mustache), array_values($mustache), $html);

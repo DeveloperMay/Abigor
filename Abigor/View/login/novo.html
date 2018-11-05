@@ -1,0 +1,17 @@
+<h1>NOVO LOGIN</h1>
+
+<form method="post" id="form-novo-login" action="/login/criar">
+	<input type="hidden" name="token" value="{{token}}">
+
+	<div class="input-text">
+		<input type="tel" name="cpf" id="cpf" autocomplete="off" accesskey="c" placeholder="cpf" />
+		<label for="cpf">CPF</label>
+	</div>
+	<div class="input-text">
+		<input type="password" name="senha" id="senha" autocomplete="off" accesskey="s" placeholder="senha" />
+		<label for="senha">Senha</label>
+	</div>
+
+	<p class="text-center"><button id="submit">CRIAR</button></p>
+</form>
+<div id="res-ajax"></div>

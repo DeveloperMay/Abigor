@@ -29,7 +29,7 @@ class Sempermissao {
 
 		$mustache = array();
 
-		$this->metas['title'] = 'DevWeb - Sem permissão para acessar este conteúdo';
+		$this->metas['title'] = 'Sem permissão para acessar este conteúdo - '.$_SESSION['login'][LOG_CODIGO]['log_nome'];
 
 		if($this->_push === false){
 

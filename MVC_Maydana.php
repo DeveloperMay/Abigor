@@ -4,8 +4,8 @@
 	"AUTHOR":"MVC_Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"NUCLEO": "MVC_Maydana",
-	"LAST EDIT": "18/08/2018",
-	"VERSION":"0.0.4"
+	"LAST EDIT": "04/11/2018",
+	"VERSION":"0.0.5"
 }
 */
 
@@ -19,7 +19,6 @@ class MVC_Maydana {
 	protected $visao 	  = 'index';
 	protected $action 	  = 'index';
 	protected $url 		  = array();
-	protected $conexao;
 
 	public $lang = '';
 
@@ -119,6 +118,7 @@ class MVC_Maydana {
 				}else{
 					// AQUI EXECUTA A ACTION INDEX (TODO CONTROLADOR TEM)
 					$controlador->index();
+
 				}
 
 			}else{

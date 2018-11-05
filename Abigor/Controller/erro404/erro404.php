@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "14/08/2018",
 		"CONTROLADOR": "Erro 404",
-		"LAST EDIT": "14/08/2018",
-		"VERSION":"0.0.1"
+		"LAST EDIT": "04/11/2018",
+		"VERSION":"0.0.2"
 	}
 */
 class Erro404 {
@@ -29,7 +29,7 @@ class Erro404 {
 
 		$mustache = array();
 
-		$this->metas['title'] = 'DevWeb - Página não encontrada';
+		$this->metas['title'] = 'Página não encontrada - Abigor';
 
 		if($this->_push === false){
 

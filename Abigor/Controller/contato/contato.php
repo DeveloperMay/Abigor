@@ -33,7 +33,7 @@ class Contato {
 
 		$mustache = array();
 
-		$this->metas['title'] = 'DevWeb - Contato';
+		$this->metas['title'] = 'Contato - '.$_SESSION['login'][LOG_CODIGO]['log_nome'];
 
 		if($this->_push === false){
 

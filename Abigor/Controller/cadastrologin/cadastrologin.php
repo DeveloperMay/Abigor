@@ -2,13 +2,13 @@
 /*
 	{
 		"AUTHOR":"Matheus Maydana",
-		"CREATED_DATA": "25/10/2018",
-		"CONTROLADOR": "Disciplina",
-		"LAST EDIT": "25/10/2018",
+		"CREATED_DATA": "04/11/2018",
+		"CONTROLADOR": "Cadastro Login",
+		"LAST EDIT": "04/11/2018",
 		"VERSION":"0.0.1"
 	}
 */
-class Disciplina {
+class Cadastrologin {
 
 	public $_func;
 
@@ -24,7 +24,7 @@ class Disciplina {
 
 	private $_push = false;
 
-	private $_controlador = 'disciplina';
+	private $_controlador = 'cadastrologin';
 
 	private $metas = array();
 
@@ -53,36 +53,36 @@ class Disciplina {
 
 	function index(){
 
-		$this->metas['title'] = 'Disciplina - '.$_SESSION['login'][LOG_CODIGO]['log_nome'];
+		$this->metas['title'] = 'Cadastro Login - '.$_SESSION['login'][LOG_CODIGO]['log_nome'];
 
 		$mustache = array(
-			'{{disciplina}}' => $this->_consulta->_getDisciplina(),
-			'{{controlador}}' => $this->_controlador
+			'{{controlador}}' => $this->_controlador,
+			'{{logins}}'	=> $this->_consulta->_getLogins()
 		);
 
 		if($this->_push === false){
 
-			echo $this->_cor->_visao($this->_cor->_layout($this->_controlador, 'disciplina', $this->metas), $mustache);
+			echo $this->_cor->_visao($this->_cor->_layout($this->_controlador, 'cadastrologin', $this->metas), $mustache);
 
 		}else{
 
-			echo $this->_cor->push($this->_controlador, 'disciplina', $mustache, $this->metas);
+			echo $this->_cor->push($this->_controlador, 'cadastrologin', $mustache, $this->metas);
 		}
 	}
 
 	function cadastrar(){
 
-		$this->metas['title'] = 'Cadastrar disciplina - '.$_SESSION['login'][LOG_CODIGO]['log_nome'];
+		$this->metas['title'] = 'Cadastrar login - '.$_SESSION['login'][LOG_CODIGO]['log_nome'];
 
-		/* QUANDO FOR CADASTRAR ALUNO */
+		/* QUANDO FOR CADASTRAR INSCRIÇÃO */
 		$visao = 'cadastrar';
 
 		/* GERA O TOKEN PARA LOGIN */
 		$token = $this->_cor->_TokenForm('novo');
 
 		$mustache = array(
-			'{{token}}' => $token,
-			'{{controlador}}' => $this->_controlador
+			'{{token}}' 		=> $token,
+			'{{controlador}}' 	=> $this->_controlador
 		);
 
 		if($this->_push === false){
@@ -100,6 +100,9 @@ class Disciplina {
 		/* VERIFICA SE EXISTE TOKEN */
 		if(isset($_POST['token']) and !empty($_POST['token'])){
 			
+
+			echo json_encode(array('res' => 'no', 'info' => 'Resposta Ajax'));
+			exit;
 			/* VERIFICA SE O TOKEN É VÁLIDO */
 			$token = $this->_cor->_verificaToken('novo', $_POST['token']);
 	
@@ -107,20 +110,26 @@ class Disciplina {
 			if($token === true){
 
 				/* SETA NOME E SENHA, PASSANDO STRIP_TAGS */
-				$dis_ensino 	= $this->_util->basico($_POST['ensino'] ?? '');
-				$dis_nome 		= $this->_util->basico($_POST['nome'] ?? '');
-				$dis_descricao 	= $this->_util->basico($_POST['descricao'] ?? '');
+				$tipo 		= $this->_util->basico($_POST['tipo'] ?? '');
+				$nome 		= $this->_util->basico($_POST['nome'] ?? '');
+				$cpf 		= $this->_util->basico($_POST['cpf'] ?? '');
+				$nascimento = $this->_util->basico($_POST['nascimento'] ?? '');
+				$sexo 		= $this->_util->basico($_POST['sexo'] ?? '');
+				$email 		= $this->_util->basico($_POST['email'] ?? '');
 
 				/* VALIDA OS DADOS */
-				$valida = $this->_validacao->novaDisciplina(array('dis_ensino' => $dis_ensino, 'dis_nome' => $dis_nome));
+				$valida = $this->_validacao->novaPessoa(array('nome' => $nome, 'email' => $email));
 
 				/* SE FOR VÁLIDO SEGUE ... */
 				if($valida === true){
 
-					$cadastra = $this->_consulta->_novaDisciplina(array(
-						'dis_ensino' => $dis_ensino,
-						'dis_nome' => $dis_nome,
-						'dis_descricao' => $dis_descricao
+					$cadastra = $this->_consulta->_novaPessoa(array(
+						'pes_tipo' 			=> $tipo,
+						'pes_nome' 			=> $nome,
+						'pes_cpf' 			=> $cpf,
+						'pes_sexo' 			=> $sexo,
+						'pes_nascimento' 	=> $nascimento,
+						'pes_email' 		=> $email
 					));
 
 					switch ($cadastra){
@@ -134,13 +143,13 @@ class Disciplina {
 						case 3:
 
 							/* CADASTRO JÁ EXISTENTE */
-							new de('Já existe um cadastro com este Nome nesse Ensino');
+							new de('Já existe um cadastro com este Nome ou CPF');
 							break;
 						
 						default:
 							
 							/* CADASTRADO COM SUCESSO */
-							new de('Disciplina cadastrada com sucesso!');
+							new de('Pessoa cadastrada com sucesso!');
 							break;
 					}
 				}

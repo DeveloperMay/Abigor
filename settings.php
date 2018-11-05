@@ -56,10 +56,7 @@ define('BANCO_DADOS', 'mysql');
 
 define('ACTION', 'maydana_system');
 
-define('ESC_CODIGO', '1');
-
 /* NOME CLIENTE */
-define('CLIENTE', 'Escola de Testes');
 
 define('URL_SITE', 'https://abigor.com.br/');
 
@@ -95,9 +92,6 @@ define('HASH_PASSWORD', '123');
 ** CONFIGURAÇÕES IMAGEMS
 **/
 session_start();
-
-
-define('LOG_CODIGO', key($_SESSION['login']));
 /*
 $id_cliente = null;
 $array = $_SESSION[CLIENTE]['login'] ?? array();

@@ -131,10 +131,9 @@ html;
 		$fetch = $sql->fetchAll(PDO::FETCH_ASSOC);
 		$sql = null;
 
-		$totalResults = ceil(count($fetch) / $this->_results);
+		$totalResults = ceil(count($fetch) / $this->_results); 
 
-		$offset = $totalResults * ($this->_page - 1);
-
+		$offset = ($this->_page - 1) * $totalResults;
 		$sql = $this->_conexao->prepare("
 			SELECT
 				ins.ins_codigo,

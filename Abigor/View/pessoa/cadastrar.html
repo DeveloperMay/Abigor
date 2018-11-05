@@ -2,56 +2,74 @@
 
 <h1>Cadastrar aluno</h1>
 
-<br />
-<br />
-<br />
-<br />
 <form action="/{{controlador}}/novo" method="post">
 
-
-	<input type="hidden" name="tipo" value="{{tipo}}" />
 	<input type="hidden" name="token" value="{{token}}" />
 
-	<div>Nome</div>
-	<div><input type="text" name="nome" /></div>
-
-	<br />
-	
-	<div>Nascimento</div>
-	<div><input type="text" name="nascimento" /></div>
-
-	<br />
-	
-	<div>CPF</div>
-	<div><input type="text" name="cpf" /></div>
-
-	<br />
-
-	<div>Sexo</div>
-	<div>
-		<select name="sexo">
-			<option value="1">Homem</option>
-			<option value="2">Mulher</option>
-		</select>
+	<div class="inline-block width-50">
+		<div class="input-text">
+			<input type="text" name="nome" id="nome" autocomplete="off" accesskey="no" placeholder="nome completo" />
+			<label for="nome">Nome</label>
+		</div>
+	</div>
+	<div class="inline-block width-50">
+		<div class="input-text">
+			<input type="tel" name="cpf" id="cpf" autocomplete="off" accesskey="cp" placeholder="cpf" />
+			<label for="cpf">CPF</label>
+		</div>
 	</div>
 
-	<br />
-	
-	<div>E-mail</div>
-	<div><input type="text" name="email" /></div>
+	<div class="inline-block width-50">
+		<div class="input-text">
+			<input type="tel" name="nascimento" id="nascimento" autocomplete="off" accesskey="na" placeholder="nascimento" />
+			<label for="nascimento">Nascimento</label>
+		</div>
+	</div>
+	<div class="inline-block width-50">
+		<div class="input-select">
+			<select name="sexo" autocomplete="off" accesskey="se" >
+				<option value="1">Homem</option>
+				<option value="2">Mulher</option>
+				<option value="3">Outro</option>
+			</select>
+			<label>Sexo</label>
+		</div>
+	</div>
+	<div class="inline-block width-50">
+		<div class="input-text">
+			<input type="tel" name="rg" id="rg" autocomplete="off" accesskey="rg" placeholder="rg" />
+			<label for="rg">RG</label>
+		</div>
+	</div>
+	<div class="inline-block width-50">
+		<div class="input-select">
+			<select name="tipo" autocomplete="off" accesskey="ti" >
+				<option value="1">Aluno</option>
+				<option value="2">Professor</option>
+			</select>
+			<label>Tipo</label>
+		</div>
+	</div>
+	<div class="st-space-4"></div>
+	<h2>Contato</h2>
+	<div class="st-space-3"></div>
 
-	<br />
-
-	<div>Tipo</div>
-	<div>
-		<select name="tipo">
-			<option value="1">Aluno</option>
-			<option value="2">Professor</option>
-		</select>
+	<div class="inline-block width-50">
+		<div class="input-text">
+			<input type="tel" name="whatsapp" id="whatsapp" autocomplete="off" accesskey="wh" placeholder="whatsapp" />
+			<label for="whatsapp">Whatsapp</label>
+		</div>
+	</div>
+	<div class="inline-block width-50">
+		<div class="input-text">
+			<input type="tel" name="telefone" id="telefone" autocomplete="off" accesskey="te" placeholder="telefone" />
+			<label for="telefone">Telefone</label>
+		</div>
+	</div>
+	<div class="input-text">
+		<input type="email" name="email" id="email" autocomplete="off" accesskey="em" placeholder="e-mail" />
+		<label for="email">E-mail</label>
 	</div>
 
-	<br />
-
-	<p><button>Cadastrar</button></p>
-	
+	<p class="text-center"><button>Cadastrar</button></p>
 </form>

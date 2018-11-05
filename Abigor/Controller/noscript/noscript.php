@@ -31,7 +31,7 @@ class Noscript{
 
 		$mustache = array();
 
-		$this->metas['title'] = 'DevWeb - Precisa ativar o JavaScript';
+		$this->metas['title'] = 'Precisa ativar o JavaScript - '.$_SESSION['login'][LOG_CODIGO]['log_nome'];
 
 		if($this->_push === false){
 

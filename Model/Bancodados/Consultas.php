@@ -12,6 +12,8 @@ class Model_Bancodados_Consultas extends Model_Bancodados_Login {
 
 	public $_conexao;
 
+	public $_PDO;
+
 	public $_util;
 
 	public $_hoje = HOJE;
@@ -32,9 +34,13 @@ class Model_Bancodados_Consultas extends Model_Bancodados_Login {
 
 	public $_page;
 
+	public $esc_codigo;
+
 	function __construct($conexao){
 
 		$this->_conexao = $conexao->conexao();
+
+		$this->_PDO = $conexao->conexao();
 
 		$this->_util = new Model_Pluggs_Utilit;
 
@@ -46,7 +52,12 @@ class Model_Bancodados_Consultas extends Model_Bancodados_Login {
 
 		$this->_controlador = $url[1] ?? '';
 
-		$this->_page = $_GET['page'] ?? 1;
+		$this->_page = $_GET['p'] ?? 0;
+
+		if($this->_page <= 0){
+			$this->_page = 0;
+		}
+
 
 		if(isset($url[1]) and $url[1] !== 'login'){
 
@@ -60,9 +71,27 @@ class Model_Bancodados_Consultas extends Model_Bancodados_Login {
 			/* SE EXISTIR A SESSÃO, VERIFICA SE EXISTE O DADO NO DB, SE NÃO TIVER LIMPA A SESSION */
 			if(isset($_SESSION['login'])){
 
-				$cliente = $this->getInfoCliente('log_codigo', key($_SESSION['login']));
+				define('LOG_CODIGO', key($_SESSION['login']));
+				$log_codigo = $this->getInfoCliente('log_codigo', key($_SESSION['login']));
 
-				if($cliente === null){
+				/* RECUPERA ESC_CODIGO */
+				$sql = $this->_PDO->prepare('
+					SELECT
+						esc.esc_codigo,
+						esc.esc_nome
+					FROM login AS log
+					LEFT JOIN escola AS esc ON esc.esc_codigo = log.esc_codigo
+					WHERE log.log_codigo = :log_codigo AND log.esc_codigo = esc.esc_codigo
+				');
+				$sql->bindParam(':log_codigo', $log_codigo);
+				$sql->execute();
+				$escola = $sql->fetch(PDO::FETCH_ASSOC);
+				$sql = null;
+
+				define('ESC_CODIGO', $escola['esc_codigo']);
+				define('CLIENTE', $escola['esc_nome']);
+
+				if($log_codigo === null){
 					unset($_SESSION['login']);
 				}
 			}

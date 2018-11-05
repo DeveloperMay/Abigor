@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "14/08/2018",
 	"MODEL": "Layout",
-	"LAST EDIT": "18/08/2018",
-	"VERSION":"0.0.2"
+	"LAST EDIT": "04/11/2018",
+	"VERSION":"0.0.3"
 }
 */
 
@@ -56,10 +56,12 @@ class Model_Layout extends Model_View{
 				'{{cache}}' 		=> $cache,
 				'{{lang}}'			=> $this->_url,
 				'{{ano}}'			=> date('Y'),
-				'{{dominio_site}}'	=> DOMINIO_SITE
+				'{{dominio_site}}'	=> DOMINIO_SITE,
+				'{{menu}}'			=> $this->_navi()
 			);
 
 			$layout = str_replace(array_keys($mustache), array_values($mustache), file_get_contents(DIR_CLASS.DIR.'Layout/'.$layout.EXTENSAO_VISAO));
+
 			return $layout;
 
 		}catch(PDOException $e){
@@ -92,19 +94,19 @@ class Model_Layout extends Model_View{
 <meta name="msapplication-tap-highlight" content="no" />
 <meta name="format-detection" content="telephone=no" />
 <meta name="description" content="{$meta_description}">
-<meta name="robots" content="index, follow" />
+<meta name="robots" content="noindex, nofollow" />
 {$noscript}
 <meta name="msapplication-tap-highlight" content="no"/>
 <meta name="apple-mobile-web-app-title" content="Abigor"/>
 <meta name="application-name" content="Abigor"/>
-<meta name="msapplication-TileImage" content="/img/caveira.png"/>
+<meta name="msapplication-TileImage" content="/img/site/caveira.png"/>
 <meta name="msapplication-TileColor" content="#e8e6e8"/>
 <meta name="theme-color" content="#1c5f8e"/>
 <meta name="author" content="Bames" />
 <link rel="manifest" href="/manifest.json"/>
 <link rel="shortcut icon" href="/img/site/caveira.png" type="image/x-icon">
 <link rel="icon" href="/img/site/caveira.png" type="image/x-icon">
-<script defer src="/js/MS.min.js{{cache}}"></script>
+<script src="/js/MS.min.js{{cache}}"></script>
 <script defer src="/js/site.min.js{{cache}}"></script>
 <link rel="stylesheet" type="text/css" href="/css/basico.min.css{{cache}}">
 php;
@@ -115,6 +117,74 @@ php;
 
 	protected function _navi(){
 
-		return '';
+		/* SETA O LOG_CODIGO DO USUARIO LOGADO */
+		$log_codigo = null;
+		$esc_codigo = null;
+		if(defined('LOG_CODIGO')){		
+			$log_codigo = LOG_CODIGO;
+		}
+		if(defined('ESC_CODIGO')){
+			$esc_codigo = ESC_CODIGO;
+		}
+
+
+		$url 		= new Model_Pluggs_Url;
+
+		$conexao = new Model_Bancodados_Conexao;
+		$PDO = $conexao->conexao();
+
+		/* BUSCA INFORMAÇÕES DO USUÁRIO */
+
+		$PDO->beginTransaction();
+		$html = '';
+
+		try {
+
+			$sql = $PDO->prepare("
+				SELECT 
+					log_group
+				FROM login
+				WHERE esc_codigo = :esc_codigo AND log_codigo = :log_codigo
+			");
+			$sql->bindParam(':esc_codigo', $esc_codigo);
+			$sql->bindParam(':log_codigo', $log_codigo);
+			$sql->execute();
+			$fetch = $sql->fetch(PDO::FETCH_ASSOC);
+			
+			$PDO->commit();
+
+			/* NAVEGA PELOS MENUS CONFIGURADO */
+			foreach ($this->_menu as $menu){
+
+				foreach ($menu as $key => $nome_menu){
+
+					/* MOSTRA O MENU QUE SEU LOG_CODIGO TEM ACESSO / PERMISSAO PARA VER */
+					if(isset($fetch['log_group']) and $fetch['log_group'] >= $key){
+
+						$nomemenu = $url->trataURL($nome_menu);
+
+						$html .= <<<html
+						- <button onclick="openURL('/{$nomemenu}');">$nome_menu</button> -
+html;
+					}
+				}
+			}
+
+		if(defined('ESC_CODIGO')){
+			$html .= <<<html
+				- <button onclick="window.location.href='/login/logout?s={$log_codigo}'" >SAIR</button> -
+html;
+		}
+		
+			return $html;
+
+		}catch (Exception $e){
+
+			$PDO->rollBack();
+			new Model_Debugger($e, __METHOD__);
+
+			return $html;
+		}
+
 	}
 }

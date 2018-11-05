@@ -33,7 +33,7 @@ class Model_Pluggs_Url {
 
 		$string = str_replace($especiais, $normais, $string);
 
-		return str_replace(' ', '-', $string);
+		return strtolower(str_replace(' ', '-', $string));
 	}
 
 	public function url(){

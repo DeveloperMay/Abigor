@@ -199,6 +199,11 @@ class Model_Pluggs_Validacao {
 			$error = 1;
 			$mensagem = 'Informe o nome da disciplina!';
 
+		}elseif(!preg_match('/^[a-z A-Z]*$/', $dis_nome)){
+
+			$error = 1;
+			$mensagem = 'Nome da disciplina não pode conter números e nem caracteres especiais!';
+
 		}elseif(strlen($dis_nome) < 4){
 
 			$error = 1;
@@ -224,7 +229,17 @@ class Model_Pluggs_Validacao {
 			$error = 1;
 			$mensagem = 'Informe o tipo de ensino da disciplina, ensino médio ou fundamental!';
 
-		}elseif($dis_ensino !== 1 OR $dis_ensino !== 2){
+		}elseif(!preg_match('/^[0-9]*$/', $dis_ensino)){
+
+			$error = 1;
+			$mensagem = 'Esta opção não é ensino médio nem ensino fundamental!';
+
+		}elseif(!is_numeric($dis_ensino)){
+
+			$error = 1;
+			$mensagem = 'Esta opção não é ensino médio nem ensino fundamental!';
+
+		}elseif($dis_ensino != 1 AND $dis_ensino != 2 AND $dis_ensino != 3){
 
 			$error = 1;
 			$mensagem = 'Informe corretamente se a disciplina é do ensino médio ou fundamental!';
@@ -312,28 +327,19 @@ class Model_Pluggs_Validacao {
 		$error 		= 0;
 		$mensagem 	= '';
 
-		/* VALIDAÇÃO DE NOME */
-		$nome 	= $dados['nome'] ?? '';
+		/* VALIDAÇÃO DE CPF */
+		$cpf 	= $dados['cpf'] ?? '';
 
-		if(empty($nome)){
-
-			$error = 1;
-			$mensagem = 'Informe seu nome, ou você não tem!?';
-
-		}elseif(!preg_match('/[A-Z][a-z]* [A-Z][a-z]*/', $nome)){
+		if(empty($cpf)){
 
 			$error = 1;
-			$mensagem = 'Informe seu nome completo e correto!';
+			$mensagem = 'Informe seu CPF, ou você não tem!?';
 
-		}elseif(strlen($nome) < 6){
-
-			$error = 1;
-			$mensagem = 'Informe seu nome completo!';
-
-		}elseif(strlen($nome) > 35){
+		}elseif(!preg_match('/[0-9]*/', $cpf)){
 
 			$error = 1;
-			$mensagem = 'Porra! Seu nome é muito grande, diminiu isso!';
+			$mensagem = 'Informe seu CPF somente números!';
+
 		}
 
 		/* SE HOUVER ERRO, EXIBIR */

@@ -49,11 +49,12 @@ class Pessoa {
 		if(isset($_POST['push']) and $_POST['push'] == 'push'){
 			$this->_push = true;
 		}
+
 	}
 
 	function index(){
 
-		$this->metas['title'] = 'Pessoas - Abigor';
+		$this->metas['title'] = 'Pessoas - '.$_SESSION['login'][LOG_CODIGO]['log_nome'];
 
 		$mustache = array(
 			'{{controlador}}' => $this->_controlador,
@@ -72,7 +73,7 @@ class Pessoa {
 
 	function cadastrar(){
 
-		$this->metas['title'] = 'Cadastrar Pessoa - Abigor';
+		$this->metas['title'] = 'Cadastrar Pessoa - '.$_SESSION['login'][LOG_CODIGO]['log_nome'];
 
 		/* QUANDO FOR CADASTRAR ALUNO */
 		$visao = 'cadastrar';

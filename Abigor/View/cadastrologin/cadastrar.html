@@ -1,14 +1,25 @@
-<h1>LOGIN</h1>
-
-<form method="post" id="form-login" action="/login/entrar">
+<h1>Cadastrar Login</h1>
+<form method="post" id="form-cadastra-login" action="/{{controlador}}/novo">
 	<input type="hidden" name="token" value="{{token}}">
 
 	<div class="input-text">
-		<input type="tel" name="cpf" id="cpf" autocomplete="off" accesskey="c" placeholder="cpf" />
+		<input type="text" name="nome" id="nome" autocomplete="off" accesskey="no" placeholder="nome" />
+		<label for="nome">Nome</label>
+	</div>
+
+	<div class="input-select">
+		<select name="group" autocomplete="off" accesskey="gr">
+			<option value="4">Professor</option>
+			<option value="5">Administrador</option>
+		</select>
+		<label for="senha">Acesso</label>
+	</div>
+	<div class="input-text">
+		<input type="tel" name="cpf" id="cpf" autocomplete="off" accesskey="cp" placeholder="cpf" />
 		<label for="cpf">CPF</label>
 	</div>
 	<div class="input-text">
-		<input type="password" name="senha" id="senha" autocomplete="off" accesskey="s" placeholder="senha" />
+		<input type="password" name="senha" id="senha" autocomplete="off" accesskey="se" placeholder="senha" />
 		<label for="senha">Senha</label>
 	</div>
 
@@ -17,7 +28,7 @@
 <div id="res-ajax"></div>
 <script>
 $(document).ready(function() {
-	$("#form-login").submit(function(event){
+	$("#form-cadastra-login").submit(function(event){
 		event.preventDefault();
 
 		var post_url 		= $(this).attr("action");
