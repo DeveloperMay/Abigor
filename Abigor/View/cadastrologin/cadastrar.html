@@ -8,11 +8,11 @@
 	</div>
 
 	<div class="input-select">
-		<select name="group" autocomplete="off" accesskey="gr">
+		<select id="group" name="group" autocomplete="off" accesskey="ac">
 			<option value="4">Professor</option>
 			<option value="5">Administrador</option>
 		</select>
-		<label for="senha">Acesso</label>
+		<label for="group">Acesso</label>
 	</div>
 	<div class="input-text">
 		<input type="tel" name="cpf" id="cpf" autocomplete="off" accesskey="cp" placeholder="cpf" />
@@ -50,7 +50,7 @@ $(document).ready(function() {
 
 			if(data.res == 'ok'){
 
-				window.location.href = "/";
+				$("#res-ajax").html(data.info);
 
 			}else{
 				

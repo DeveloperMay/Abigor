@@ -35,10 +35,12 @@ class Model_Bancodados_Login extends Model_Bancodados_Pessoa {
 
 
 				/* SUCESSO NA QUERY */
+
 				if(is_array($fetch) and isset($fetch['log_codigo'])){
 
 					/* DEFINE QUEM ESTÁ LOGADO */
-					$this->_timesnow($fetch['log_codigo'], 1);
+					$this->_timesnow($fetch['log_codigo'], 'logando');
+				
 					/* LOGADO COM SUCESSO */
 					return 1;
 				}
@@ -68,7 +70,7 @@ class Model_Bancodados_Login extends Model_Bancodados_Pessoa {
 
 		$return = 1;
 		if(!empty($log_codigo) and is_numeric($log_codigo)){
-			
+
 			$this->_timesnow($log_codigo);
 			unset($_SESSION['login']);
 			$return = 2;
@@ -88,29 +90,33 @@ class Model_Bancodados_Login extends Model_Bancodados_Pessoa {
 
 		$log_codigo = $this->_util->basico($log_codigo);
 
-		/* USUARIO SAINDO (LOGOUT) - MUDA STATUS */
-		$log_status = 2;
-		if($login !== null){
+		/* USUARIO LOGANDO (LOGIN) - MUDA STATUS */
+		$log_status = 1;
+		if($login !== 'logando'){
 
-			/* USUARIO LOGANDO (LOGIN) - MUDA STATUS */
-			$log_status = 1;
+			/* USUARIO SAINDO (LOGOUT) - MUDA STATUS */
+			$log_status = 2;
 		}
 
 		$sql = $this->_PDO->prepare('
 			UPDATE login SET 
 				log_status = :log_status, 
 				log_hora = :log_hora, 
-				log_dia = :log_dia, 
-				log_ip	= :log_ip 
+				log_data = :log_data, 
+				log_ip	= :log_ip,
+				log_atualizacao = :log_atualizacao
 			WHERE log_codigo = :log_codigo
 		');
-		$sql->bindParam(':log_status', $log_status, PDO::PARAM_INT);
-		$sql->bindParam(':log_hora', $this->_agora, PDO::PARAM_STR);
-		$sql->bindParam(':log_dia', $this->_hoje, PDO::PARAM_STR);
-		$sql->bindParam(':log_ip', $this->_ip, PDO::PARAM_STR);
-		$sql->bindParam(':log_codigo', $log_codigo, PDO::PARAM_INT);
+		$sql->bindParam(':log_status', $log_status);
+		$sql->bindParam(':log_hora', $this->_agora);
+		$sql->bindParam(':log_data', $this->_hoje);
+		$sql->bindParam(':log_atualizacao', $this->_hoje);
+		$sql->bindParam(':log_ip', $this->_ip);
+		$sql->bindParam(':log_codigo', $log_codigo);
 		$sql->execute();
 		$sql = null;
+
+
 
 		if(!isset($_SESSION['login']) || empty($_SESSION['login'])){
 

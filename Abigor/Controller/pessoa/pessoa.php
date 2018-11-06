@@ -135,32 +135,38 @@ class Pessoa {
 						case 1:
 
 							/* FALHA AO CADASTRAR */
-							new de('Ops, tente novamente mais tarde!');
+							echo json_encode(array('res' => 'no', 'info' => 'Ops, tente novamente mais tarde!'));
 							break;
 
 						case 3:
 
 							/* CADASTRO JÁ EXISTENTE */
-							new de('Já existe um cadastro com este Nome ou CPF');
+							echo json_encode(array('res' => 'no', 'info' => 'Já existe um cadastro com este Nome ou CPF'));
 							break;
 						
 						default:
 							
 							/* CADASTRADO COM SUCESSO */
-							new de('Pessoa cadastrada com sucesso!');
+							echo json_encode(array('res' => 'ok', 'info' => 'Pessoa cadastrada com sucesso!'));
 							break;
 					}
-				}
+				
+				}else{
 
-				new de($valida);
+					echo json_encode(array('res' => 'no', 'info' => $valida));
+					exit;
+				}
+			
+			}else{
+
+				echo json_encode(array('res' => 'no', 'info' => 'token errado seu pnc!'));
 				exit;
 			}
 
-			new de('token errado seu pnc!');
+		}else{
+
+			echo json_encode(array('res' => 'no', 'info' => 'informe o token !'));
 			exit;
 		}
-
-		new de('informe o token !');
-		exit;
 	}
 }

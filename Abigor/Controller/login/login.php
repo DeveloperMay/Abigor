@@ -42,13 +42,13 @@ class Login extends metodos{
 		if(isset($_POST['push']) and $_POST['push'] == 'push'){
 			$this->_push = true;
 		}
+	}
+
+	function index(){
 
 		if(isset($_SESSION['login'])){
 			header('location: /');
 		}
-	}
-
-	function index(){
 
 		$this->metas['title'] = 'Login - Abigor';
 

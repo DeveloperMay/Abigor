@@ -100,36 +100,34 @@ class Cadastrologin {
 		/* VERIFICA SE EXISTE TOKEN */
 		if(isset($_POST['token']) and !empty($_POST['token'])){
 			
-
-			echo json_encode(array('res' => 'no', 'info' => 'Resposta Ajax'));
-			exit;
 			/* VERIFICA SE O TOKEN É VÁLIDO */
 			$token = $this->_cor->_verificaToken('novo', $_POST['token']);
 	
 			/* SE FOR VÁLIDO SEGUE ...*/
 			if($token === true){
 
-				/* SETA NOME E SENHA, PASSANDO STRIP_TAGS */
-				$tipo 		= $this->_util->basico($_POST['tipo'] ?? '');
-				$nome 		= $this->_util->basico($_POST['nome'] ?? '');
-				$cpf 		= $this->_util->basico($_POST['cpf'] ?? '');
-				$nascimento = $this->_util->basico($_POST['nascimento'] ?? '');
-				$sexo 		= $this->_util->basico($_POST['sexo'] ?? '');
-				$email 		= $this->_util->basico($_POST['email'] ?? '');
+				/* SETA VARIAVEIS, PASSANDO STRIP_TAGS */
+				$log_nome 		= $this->_util->basico($_POST['nome'] ?? '');
+				$log_group 		= $this->_util->basico($_POST['group'] ?? '');
+				$log_cpf 		= $this->_util->basico($_POST['cpf'] ?? '');
+				$log_senha 		= $this->_util->basico($_POST['senha'] ?? '');
 
 				/* VALIDA OS DADOS */
-				$valida = $this->_validacao->novaPessoa(array('nome' => $nome, 'email' => $email));
+				$valida = $this->_validacao->novoCadastrologin(array(
+					'log_nome' => $log_nome, 
+					'log_group' => $log_group, 
+					'log_cpf' => $log_cpf, 
+					'log_senha' => $log_senha
+				));
 
 				/* SE FOR VÁLIDO SEGUE ... */
 				if($valida === true){
 
-					$cadastra = $this->_consulta->_novaPessoa(array(
-						'pes_tipo' 			=> $tipo,
-						'pes_nome' 			=> $nome,
-						'pes_cpf' 			=> $cpf,
-						'pes_sexo' 			=> $sexo,
-						'pes_nascimento' 	=> $nascimento,
-						'pes_email' 		=> $email
+					$cadastra = $this->_consulta->novoCadastrologin(array(
+						'log_nome' => $log_nome, 
+						'log_group' => $log_group, 
+						'log_cpf' => $log_cpf, 
+						'log_senha' => $log_senha
 					));
 
 					switch ($cadastra){
@@ -137,32 +135,38 @@ class Cadastrologin {
 						case 1:
 
 							/* FALHA AO CADASTRAR */
-							new de('Ops, tente novamente mais tarde!');
+							echo json_encode(array('res' => 'no', 'info' => 'Ops, tente novamente mais tarde!'));
 							break;
 
 						case 3:
 
 							/* CADASTRO JÁ EXISTENTE */
-							new de('Já existe um cadastro com este Nome ou CPF');
+							echo json_encode(array('res' => 'no', 'info' => 'Já existe um login CPF'));
 							break;
 						
 						default:
-							
+
 							/* CADASTRADO COM SUCESSO */
-							new de('Pessoa cadastrada com sucesso!');
+							echo json_encode(array('res' => 'ok', 'info' => 'Login cadastrado com sucesso!'));
 							break;
 					}
+				}else{
+
+					echo json_encode(array('res' => 'no', 'info' => $valida));
+					exit;
 				}
 
-				new de($valida);
+			}else{
+
+				echo json_encode(array('res' => 'no', 'info' => 'token errado seu pnc!'));
 				exit;
 			}
 
-			new de('token errado seu pnc!');
+		}else{
+
+			echo json_encode(array('res' => 'no', 'info' => 'informe o token !'));
 			exit;
 		}
 
-		new de('informe o token !');
-		exit;
 	}
 }

@@ -2,7 +2,7 @@
 
 <h1>Cadastrar aluno</h1>
 
-<form action="/{{controlador}}/novo" method="post">
+<form action="/{{controlador}}/novo" id="form-cadastra-pessoa" method="post">
 
 	<input type="hidden" name="token" value="{{token}}" />
 
@@ -71,5 +71,43 @@
 		<label for="email">E-mail</label>
 	</div>
 
-	<p class="text-center"><button>Cadastrar</button></p>
+	<p class="text-center"><button id="btn-submit">Cadastrar</button></p>
 </form>
+<div id="res-ajax"></div>
+<script>
+$(document).ready(function() {
+	$("#form-cadastra-pessoa").submit(function(event){
+		event.preventDefault();
+
+		var post_url 		= $(this).attr("action");
+		var request_method 	= $(this).attr("method");
+		var form_data 		= $(this).serialize();
+
+		var resAjax 		= $("#res-ajax");
+		
+		var btnSubmit = $('#btn-submit');
+
+		resAjax.html('Aguarde...');
+		$.ajax({
+			url : post_url,
+			type: request_method,
+			data : form_data
+		}).done(function(data){
+
+			var data = jQuery.parseJSON(data);
+
+			if(data.res == 'ok'){
+
+				$("#res-ajax").html(data.info);
+
+			}else{
+				
+				$("#res-ajax").html(data.info);
+			}
+
+		}).fail(function(data) {
+			$("#res-ajax").html('Erro no Request');
+		});
+	});
+});
+</script>
