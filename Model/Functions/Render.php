@@ -3,8 +3,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"MODEL": "Render HTML",
-	"LAST EDIT": "31/10/2018",
-	"VERSION":"0.0.9"
+	"LAST EDIT": "06/11/2018",
+	"VERSION":"0.1.0"
 */
 
 class Model_Functions_Render{
@@ -71,7 +71,7 @@ html;
 		<div class="comp-acao">
 			<button>Ações</button>
 			<ul>
-				<li><button onclick="openURL('/{$controlador}/ver/{$codigo}/{$this->_url->trataURL($descricao)}');">Editar</button></li>
+				<li><button onclick="openURL('/{$controlador}/editar/{$codigo}/{$this->_url->trataURL($descricao)}');">Editar</button></li>
 				<li><button onclick="openURL('/{$controlador}/excluir/{$codigo}');">Excluir</button></li>
 			</ul>
 		</div>

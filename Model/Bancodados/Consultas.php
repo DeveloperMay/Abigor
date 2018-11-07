@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "14/08/2018",
 	"MODEL": "Consultas",
-	"LAST EDIT": "31/10/2018",
-	"VERSION":"0.0.3"
+	"LAST EDIT": "06/11/2018",
+	"VERSION":"0.0.4"
 }
 */
 class Model_Bancodados_Consultas extends Model_Bancodados_Login {
@@ -36,6 +36,12 @@ class Model_Bancodados_Consultas extends Model_Bancodados_Login {
 
 	public $esc_codigo;
 
+	public $log_codigo;
+
+	public $cliente;
+
+	public $_grid;
+
 	function __construct($conexao){
 
 		$this->_conexao = $conexao->conexao();
@@ -47,6 +53,8 @@ class Model_Bancodados_Consultas extends Model_Bancodados_Login {
 		$this->_url = new Model_Pluggs_Url;
 
 		$this->_render = new Model_Functions_Render;
+
+		$this->_grid = new Model_Grid;
 
 		$url = $this->_url->url();
 
@@ -74,22 +82,39 @@ class Model_Bancodados_Consultas extends Model_Bancodados_Login {
 				define('LOG_CODIGO', key($_SESSION['login']));
 				$log_codigo = $this->getInfoCliente('log_codigo', key($_SESSION['login']));
 
-				/* RECUPERA ESC_CODIGO */
-				$sql = $this->_PDO->prepare('
-					SELECT
-						esc.esc_codigo,
-						esc.esc_nome
-					FROM login AS log
-					LEFT JOIN escola AS esc ON esc.esc_codigo = log.esc_codigo
-					WHERE log.log_codigo = :log_codigo AND log.esc_codigo = esc.esc_codigo
-				');
-				$sql->bindParam(':log_codigo', $log_codigo);
-				$sql->execute();
-				$escola = $sql->fetch(PDO::FETCH_ASSOC);
-				$sql = null;
+				try {
 
-				define('ESC_CODIGO', $escola['esc_codigo']);
-				define('CLIENTE', $escola['esc_nome']);
+					$this->_PDO->beginTransaction();
+
+					/* RECUPERA ESC_CODIGO */
+					$sql = $this->_PDO->prepare('
+						SELECT
+							log.log_codigo,
+							esc.esc_codigo,
+							esc.esc_nome
+						FROM login AS log
+						LEFT JOIN escola AS esc ON esc.esc_codigo = log.esc_codigo
+						WHERE log.log_codigo = :log_codigo AND log.esc_codigo = esc.esc_codigo
+					');
+					$sql->bindParam(':log_codigo', $log_codigo);
+					$sql->execute();
+					$escola = $sql->fetch(PDO::FETCH_ASSOC);
+					$sql = null;
+
+					$this->_PDO->commit();
+
+					$this->esc_codigo = $escola['esc_codigo'];
+					$this->cliente = $escola['esc_nome'];
+					$this->log_codigo = $escola['log_codigo'];
+
+					define('ESC_CODIGO', $escola['esc_codigo']);
+					define('CLIENTE', $escola['esc_nome']);
+
+				} catch(Exception $e){
+
+					$this->_PDO->rollBack();
+					new Model_Debugger($e, __METHOD__);
+				}
 
 				if($log_codigo === null){
 					unset($_SESSION['login']);

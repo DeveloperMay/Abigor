@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"CONFIG": "Setting",
-	"LAST EDIT": "29/10/2018",
-	"VERSION":"0.1.0"
+	"LAST EDIT": "06/11/2018",
+	"VERSION":"0.1.1"
 }
 */
 
@@ -14,7 +14,7 @@
 TRUE = DESENVOLVIMENTO
 FALSE = PRODUCAO (saveLogs);
 **/
-define('DEV', false);
+define('DEV', true);
 
 /**
 ** CONFIGURAÇÕES DO MVC

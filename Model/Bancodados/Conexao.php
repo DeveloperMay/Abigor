@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Maydana",
 	"CREATED_DATA": "14/08/2018",
 	"MODEL": "Conexao",
-	"LAST EDIT": "29/10/2018",
-	"VERSION":"0.0.2"
+	"LAST EDIT": "06/11/2018",
+	"VERSION":"0.0.3"
 }
 */
 
@@ -23,7 +23,6 @@ class Model_Bancodados_Conexao {
 
 			$banco = BANCO_DADOS;
 			if($banco == 'pgsql'){
-				
 				// POSTGRES
 				$PDO = new PDO('pgsql:host='.DB_HOST.' dbname='.DB_NAME.' user='.DB_USER.' password='.DB_PASS.' port='.DB_PORT.'');
 				return $PDO;

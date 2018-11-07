@@ -24,21 +24,46 @@ class Model_Debugger {
 		/* SE E FOR UM OBJETO (OBJETO EXEPTION DA QUERY - Exception $e) */
 		if(is_object($e)){
 
+			/* SETA VARIAVEIS */
+			$cliente = 'Desconhecido';
+			if(defined('CLIENTE')){
+				$cliente = CLIENTE;
+			}
+
+			$log_codigo = 'Desconhecido';
+			if(defined('LOG_CODIGO')){
+				$log_codigo = LOG_CODIGO;
+			}
+
+			$dominio_site = 'Desconhecido';
+			if(defined('DOMINIO_SITE')){
+				$dominio_site = DOMINIO_SITE;
+			}
+
+			$uri = 'Desconhecido';
+			if(isset($_SERVER['REQUEST_URI']) and !empty($_SERVER['REQUEST_URI'])){
+				$uri = $_SERVER['REQUEST_URI'];
+			}
+
+			$http_referer = 'Desconhecido';
+			if(isset($_SERVER['HTTP_REFERER']) and !empty($_SERVER['HTTP_REFERER'])){
+				$http_referer = $_SERVER['HTTP_REFERER'];
+			}
+
+			$line 			= $e->getLine();
+			$code 			= $e->getCode();
+			$file 			= $e->getFile();
+			$message 		= $e->getMessage();
+			$uri 			= $uri;
+			$referer 		= $http_referer;
+			$log_codigo 	= $log_codigo;
+			$cliente 		= $cliente;
+			$dominio_site 	= $dominio_site;
+
 			/* QUANDO ESTIVER ONLINE */
 			if(DEV === false){
 
 				$this->_PDO = $this->conexao();
-
-				/* SETA VARIAVEIS */
-				$line 			= $e->getLine();
-				$code 			= $e->getCode();
-				$file 			= $e->getFile();
-				$message 		= $e->getMessage();
-				$uri 			= $_SERVER['REQUEST_URI'];
-				$referer 		= $_SERVER['HTTP_REFERER'];
-				$log_codigo 	= LOG_CODIGO;
-				$cliente 		= CLIENTE;
-				$dominio_site 	= DOMINIO_SITE;
 
 				/* GRAVAR NO BANCO DE DADOS O ERRO - LOG */
 				$this->_PDO->beginTransaction();
@@ -122,11 +147,11 @@ class Model_Debugger {
 							'IP' 	=> $this->_ip
 						),
 						'ORIGEM' => array(
-							'LOG_CODIGO'	=> LOG_CODIGO,
-							'CLIENTE' 		=> CLIENTE,
-							'DOMINIO' 		=> DOMINIO_SITE,
-							'REQUEST_URI' 	=> $_SERVER['REQUEST_URI'],
-							'HTTP_REFERER' 	=> $_SERVER['HTTP_REFERER'],
+							'LOG_CODIGO'	=> $log_codigo,
+							'CLIENTE' 		=> $cliente,
+							'DOMINIO' 		=> $dominio_site,
+							'REQUEST_URI' 	=> $uri,
+							'HTTP_REFERER' 	=> $http_referer,
 						)
 					)
 				);

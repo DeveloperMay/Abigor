@@ -4,8 +4,8 @@
 	"AUTHOR":"MVC_Maydana",
 	"CREATED_DATA": "09/04/2018",
 	"NUCLEO": "MVC_Maydana",
-	"LAST EDIT": "18/08/2018",
-	"VERSION":"0.0.4"
+	"LAST EDIT": "06/11/2018",
+	"VERSION":"0.0.5"
 }
 */
 
@@ -193,13 +193,13 @@ class de{
 
 		if(is_array($a)){
 
-			echo '<pre>';
+			echo '<pre style="color: lime; background-color: black; width: 100%; min-height: 100vh; margin: auto; font-size: 18px;">';
 			print_r($a);
 			exit;
 
 		}else{
 
-			echo '<pre>';
+			echo '<pre style="color: lime; background-color: black; width: 100%; min-height: 100vh; margin: auto; font-size: 18px;">';
 			var_dump($a);
 			exit;
 		}

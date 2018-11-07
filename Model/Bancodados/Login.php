@@ -137,7 +137,7 @@ class Model_Bancodados_Login extends Model_Bancodados_Pessoa {
 		$fetch = $sql->fetch(PDO::FETCH_ASSOC);
 		$sql = null;
 
-		return $fetch[$infoCliente];
+		return $this->_util->basico($fetch[$infoCliente]);
 	}
 
 }

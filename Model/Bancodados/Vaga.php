@@ -4,8 +4,8 @@
 		"AUTHOR":"Matheus Maydana",
 		"CREATED_DATA": "29/10/2018",
 		"MODEL": "Vaga",
-		"LAST EDIT": "31/10/2018",
-		"VERSION":"0.0.2"
+		"LAST EDIT": "06/11/2018",
+		"VERSION":"0.0.3"
 	}
 */
 class Model_Bancodados_Vaga extends Model_Bancodados_Cadastrologin {
