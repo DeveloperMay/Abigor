@@ -108,6 +108,7 @@ class Model_Layout extends Model_View{
 <link rel="icon" href="/img/site/caveira.png" type="image/x-icon">
 <script src="/js/MS.min.js{{cache}}"></script>
 <script defer src="/js/site.min.js{{cache}}"></script>
+<script defer src="/js/Mask.js{{cache}}"></script>
 <link rel="stylesheet" type="text/css" href="/css/basico.min.css{{cache}}">
 php;
 

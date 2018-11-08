@@ -4,8 +4,8 @@
 	"AUTHOR":"Matheus Mayana",
 	"CREATED_DATA": "31/07/2018",
 	"MODEL": "Validacão",
-	"LAST EDIT": "31/10/2018",
-	"VERSION":"0.0.3"
+	"LAST EDIT": "08/11/2018",
+	"VERSION":"0.0.4"
 }
 */
 
@@ -80,7 +80,7 @@ class ValidaCadastrologin extends ValidaVaga{
 			$error = 1;
 			$mensagem = 'Informe o CPF do login';
 
-		}elseif(!preg_match('/^[0-9]*$/', $log_cpf)){
+		}elseif(!preg_match('/^([0-9]){3}\.([0-9]){3}\.([0-9]){3}-([0-9]){2}$/', $log_cpf)){
 
 			$error = 1;
 			$mensagem = 'Informe o cpf somente com números';
